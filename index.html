@@ -1,0 +1,1797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cassette Wala Pyaar — Gaane Purane, Feelings Naye</title>
+  <meta name="description" content="A nostalgic, cinematic retro Bollywood digital cassette experience inspired by 1990s Indian cassette shops, handwritten love letters, and timeless mixtapes.">
+  <meta property="og:title" content="Cassette Wala Pyaar">
+  <meta property="og:description" content="Gaane Purane, Feelings Naye. A vintage Bollywood digital time capsule with real cassette player.">
+  <meta property="og:type" content="website">
+
+  <!-- Google Fonts for authentic retro Bollywood typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Kaushan+Script&family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;0,900;1,600;1,700&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Yatra+One&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       1. COLOR SYSTEM & DESIGN TOKENS (MATCHING REFERENCE SCREENSHOT)
+       ========================================================================== */
+    :root {
+      --bg-dark: #120304;
+      --bg-maroon: #1f0508;
+      --bg-burgundy: #2b080d;
+      --bg-surface: #380c13;
+      --amber-gold: #f5b335;
+      --amber-glow: #ffc44d;
+      --amber-bright: #ffd54f;
+      --red-rose: #c9182b;
+      --paper-cream: #fbf5e6;
+      --paper-aged: #eddcb9;
+      --paper-dark: #422a1d;
+      --text-cream: #fff3e0;
+      --text-muted: rgba(255, 243, 224, 0.72);
+      --glass-border: rgba(245, 179, 53, 0.28);
+      --glass-bg: rgba(26, 6, 9, 0.88);
+      
+      --font-brand: 'Kaushan Script', cursive;
+      --font-headline: 'Playfair Display', Georgia, serif;
+      --font-hand: 'Caveat', cursive, sans-serif;
+      --font-ui: 'Manrope', -apple-system, sans-serif;
+      --font-mono: 'Space Mono', monospace;
+
+      --player-height: 84px;
+      --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      background-color: var(--bg-dark);
+      color: var(--text-cream);
+      font-family: var(--font-ui);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      min-height: 100vh;
+      background: radial-gradient(circle at 50% 25%, #2c080d 0%, #1a0406 50%, #0e0203 100%);
+      background-attachment: fixed;
+      position: relative;
+      overflow-x: hidden;
+      padding-bottom: calc(var(--player-height) + 40px);
+    }
+
+    /* Subtle Analog Film Grain Overlay */
+    .film-grain-layer {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.045;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Ambient Warm Vignette */
+    .vignette-layer {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9998;
+      background: radial-gradient(circle at center, transparent 45%, rgba(10, 2, 3, 0.75) 100%);
+    }
+
+    /* ==========================================================================
+       2. RETRO HEADER (SLIM FULL-WIDTH BURGUNDY TEXTURED HEADER)
+       ========================================================================== */
+    .site-header {
+      position: sticky;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 68px;
+      z-index: 1000;
+      background: rgba(33, 6, 10, 0.94);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(245, 179, 53, 0.15);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+      padding: 0 clamp(1.25rem, 4vw, 3.5rem);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* Header Brand Logo (Left) */
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      text-decoration: none;
+      color: var(--text-cream);
+    }
+    .brand-title {
+      font-family: var(--font-brand);
+      font-size: clamp(1.25rem, 2vw, 1.65rem);
+      color: var(--text-cream);
+      letter-spacing: -0.01em;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .brand-cassette-svg {
+      width: 24px;
+      height: 16px;
+      stroke: var(--amber-gold);
+      fill: none;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .brand-heart-doodle {
+      color: var(--amber-gold);
+      font-family: var(--font-hand);
+      font-size: 1.4rem;
+      margin-left: 2px;
+    }
+
+    /* Center Navigation (Matches Screenshot: Home, Mixtapes, Yaadein, Radio) */
+    .nav-center {
+      display: flex;
+      align-items: center;
+      gap: clamp(1.5rem, 3vw, 2.75rem);
+    }
+    .nav-item {
+      font-family: var(--font-ui);
+      font-size: 0.9375rem;
+      font-weight: 600;
+      color: rgba(255, 243, 224, 0.8);
+      text-decoration: none;
+      position: relative;
+      padding: 0.25rem 0;
+      transition: color 0.2s ease;
+      letter-spacing: 0.02em;
+    }
+    .nav-item:hover, .nav-item:focus-visible {
+      color: var(--amber-gold);
+      outline: none;
+    }
+    .nav-item.active {
+      color: var(--amber-gold);
+      font-weight: 700;
+    }
+    .nav-item.active::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--amber-gold);
+      border-radius: 9999px;
+      box-shadow: 0 0 8px rgba(245, 179, 53, 0.6);
+    }
+
+    /* Header Right Handwritten Note & Cassette Icon */
+    .header-right-note {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-family: var(--font-hand);
+      font-size: clamp(1.15rem, 1.4vw, 1.4rem);
+      color: var(--text-cream);
+      opacity: 0.92;
+      text-align: right;
+    }
+    .header-right-note span {
+      line-height: 1.1;
+    }
+    .header-right-icons {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      color: var(--amber-gold);
+    }
+
+    /* ==========================================================================
+       3. HERO SECTION (GAANE PURANE, FEELINGS NAYE + CINEMATIC CASSETTE SCENE)
+       ========================================================================== */
+    .hero-container {
+      position: relative;
+      max-width: 1520px;
+      margin: 0 auto;
+      padding: clamp(1.5rem, 4vh, 2.75rem) clamp(1.25rem, 4vw, 3.5rem) 1.5rem;
+    }
+
+    .hero-layout-grid {
+      display: grid;
+      grid-template-columns: 0.88fr 1.12fr;
+      align-items: center;
+      gap: clamp(1.5rem, 3.5vw, 3rem);
+      min-height: 520px;
+    }
+
+    /* Left Typography Column */
+    .hero-left-col {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      z-index: 10;
+    }
+
+    .hero-main-title {
+      font-family: var(--font-headline);
+      font-weight: 900;
+      font-size: clamp(2.8rem, 5.8vw, 5.2rem);
+      line-height: 0.95;
+      letter-spacing: -0.025em;
+      color: #faf0db;
+      text-shadow: 0 4px 20px rgba(0, 0, 0, 0.75), 0 0 35px rgba(245, 179, 53, 0.15);
+      margin-bottom: 1.25rem;
+      user-select: none;
+    }
+    .hero-main-title .highlight-line {
+      display: block;
+      color: #faf0db;
+      position: relative;
+    }
+    .hero-title-heart-doodle {
+      display: block;
+      width: 44px;
+      height: 18px;
+      margin-top: 6px;
+      color: var(--amber-gold);
+    }
+
+    .hero-subtitle {
+      font-family: var(--font-ui);
+      font-size: clamp(1.1rem, 1.6vw, 1.4rem);
+      font-weight: 500;
+      color: rgba(255, 243, 224, 0.88);
+      margin-bottom: 2rem;
+      letter-spacing: 0.01em;
+    }
+
+    /* CTA Button: Parchment rounded pill with golden borders & cassette icon */
+    .btn-rewind-heart {
+      align-self: flex-start;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.85rem;
+      background: linear-gradient(180deg, #fceecf 0%, #edd8ae 100%);
+      color: #3b1b0b;
+      font-family: var(--font-ui);
+      font-size: clamp(0.95rem, 1.2vw, 1.0625rem);
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.9rem 2rem;
+      border-radius: 9999px;
+      border: 2px solid var(--amber-gold);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.65), 0 0 16px rgba(245, 179, 53, 0.35);
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.25s var(--ease-smooth);
+    }
+    .btn-rewind-heart:hover, .btn-rewind-heart:focus-visible {
+      transform: translateY(-3px) scale(1.02);
+      background: linear-gradient(180deg, #fff3dc 0%, #f7dfb5 100%);
+      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.75), 0 0 24px rgba(245, 179, 53, 0.55);
+      outline: none;
+    }
+    .btn-rewind-heart:active {
+      transform: translateY(0) scale(0.99);
+    }
+    .btn-rewind-icon {
+      width: 22px;
+      height: 15px;
+      stroke: #3b1b0b;
+      stroke-width: 2;
+      fill: none;
+    }
+    .btn-rewind-arrow {
+      font-size: 1.25rem;
+      font-weight: 800;
+      transition: transform 0.2s ease;
+    }
+    .btn-rewind-heart:hover .btn-rewind-arrow {
+      transform: translateX(4px);
+    }
+
+    /* Right Visual Composition Stage (Matches Screenshot) */
+    .hero-right-col {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .hero-scene-frame {
+      position: relative;
+      width: 100%;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85), 0 0 45px rgba(245, 179, 53, 0.12);
+      border: 1px solid rgba(245, 179, 53, 0.22);
+      background: #1e0508;
+    }
+
+    .hero-scene-img {
+      width: 100%;
+      height: auto;
+      display: block;
+      object-fit: cover;
+      aspect-ratio: 16 / 9;
+      filter: saturate(1.08) contrast(1.05);
+      transition: transform 0.6s var(--ease-smooth);
+    }
+    .hero-scene-frame:hover .hero-scene-img {
+      transform: scale(1.015);
+    }
+
+    /* Ambient Warm Glow & Vignette on Image */
+    .hero-scene-overlay {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: radial-gradient(circle at 60% 45%, rgba(245, 179, 53, 0.15) 0%, rgba(26, 4, 7, 0.35) 60%, rgba(18, 3, 5, 0.8) 100%);
+    }
+
+    /* Interactive Overlay: Floating Handwritten Tape Stamp Note */
+    .hero-tape-floating-note {
+      position: absolute;
+      bottom: 24px;
+      right: 28px;
+      font-family: var(--font-hand);
+      font-size: clamp(1.2rem, 1.8vw, 1.55rem);
+      color: #f7eed8;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.85);
+      z-index: 5;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    /* Interactive Animated Spool Reels Overlay on Hero Image Cassette */
+    .hero-live-reels-indicator {
+      position: absolute;
+      top: 51.5%;
+      right: 33.2%;
+      transform: translate(50%, -50%);
+      display: flex;
+      align-items: center;
+      gap: clamp(34px, 5.5vw, 68px);
+      pointer-events: none;
+      opacity: 0.85;
+    }
+    .hero-live-spool {
+      width: clamp(20px, 3.2vw, 38px);
+      height: clamp(20px, 3.2vw, 38px);
+      border: 2px dashed rgba(245, 179, 53, 0.75);
+      border-radius: 50%;
+      position: relative;
+    }
+    .playing .hero-live-spool {
+      animation: spinReel 2.2s linear infinite;
+    }
+    @keyframes spinReel {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* ==========================================================================
+       4. FEATURED MIXTAPES SECTION (MATCHING 4 CARDS IN SCREENSHOT)
+       ========================================================================== */
+    .mixtapes-section {
+      max-width: 1520px;
+      margin: 1.5rem auto 2.5rem;
+      padding: 0 clamp(1.25rem, 4vw, 3.5rem);
+    }
+
+    /* Section Header Label: Torn-paper style cream sticker */
+    .section-label-banner {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.65rem;
+      background: var(--paper-cream);
+      color: #381a0e;
+      font-family: var(--font-ui);
+      font-size: clamp(0.78rem, 1vw, 0.875rem);
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0.45rem 1.15rem;
+      border-radius: 4px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+      border: 1px solid rgba(184, 156, 116, 0.4);
+      margin-bottom: 1.5rem;
+      position: relative;
+      transform: rotate(-0.5deg);
+    }
+    .section-label-cassette-icon {
+      width: 18px;
+      height: 12px;
+      stroke: #381a0e;
+      stroke-width: 1.8;
+      fill: none;
+    }
+    .section-label-arrow {
+      font-family: var(--font-hand);
+      font-size: 1.5rem;
+      line-height: 0.5;
+      color: var(--amber-gold);
+      margin-left: 0.25rem;
+    }
+
+    /* 4 Horizontal Cassette-Cover Cards Grid */
+    .mixtapes-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: clamp(1rem, 1.8vw, 1.75rem);
+    }
+
+    .mixtape-card {
+      position: relative;
+      background: #1e0508;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid rgba(245, 179, 53, 0.22);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6), 0 0 15px rgba(0, 0, 0, 0.35);
+      cursor: pointer;
+      transition: all 0.28s var(--ease-smooth);
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+    }
+    .mixtape-card:hover, .mixtape-card:focus-visible {
+      transform: translateY(-6px);
+      border-color: var(--amber-gold);
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.75), 0 0 24px rgba(245, 179, 53, 0.3);
+      outline: none;
+    }
+    .mixtape-card.active-mixtape {
+      border-color: var(--amber-gold);
+      box-shadow: 0 0 0 2px var(--amber-gold), 0 18px 40px rgba(0, 0, 0, 0.85);
+    }
+
+    .mixtape-card-artwork {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      overflow: hidden;
+      background: #140204;
+    }
+    .mixtape-card-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.4s ease;
+    }
+    .mixtape-card:hover .mixtape-card-img {
+      transform: scale(1.04);
+    }
+
+    /* Cassette Shell Bevel & Reflections */
+    .mixtape-card-plastic-overlay {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12), inset 0 2px 4px rgba(255, 255, 255, 0.15);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, transparent 40%, rgba(0, 0, 0, 0.35) 100%);
+    }
+
+    /* Active Indicator Tag on Card */
+    .mixtape-active-badge {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      background: var(--amber-gold);
+      color: #21070b;
+      font-family: var(--font-ui);
+      font-size: 0.6875rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 0.2rem 0.55rem;
+      border-radius: 4px;
+      display: none;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    }
+    .mixtape-card.active-mixtape .mixtape-active-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    /* Card Details Footer */
+    .mixtape-card-footer {
+      padding: 0.85rem 1rem 0.95rem;
+      background: #24070c;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid rgba(245, 179, 53, 0.12);
+    }
+    .mixtape-info-col h3 {
+      font-family: var(--font-headline);
+      font-size: 1.0625rem;
+      font-weight: 700;
+      color: #faf0db;
+      margin-bottom: 0.15rem;
+    }
+    .mixtape-info-col p {
+      font-family: var(--font-ui);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+    .mixtape-play-icon-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(245, 179, 53, 0.15);
+      border: 1px solid rgba(245, 179, 53, 0.35);
+      color: var(--amber-gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+    .mixtape-card:hover .mixtape-play-icon-btn {
+      background: var(--amber-gold);
+      color: #21070b;
+      transform: scale(1.08);
+    }
+
+    /* ==========================================================================
+       5. FIXED BOTTOM RETRO MUSIC PLAYER (EXACT TO REFERENCE SCREENSHOT)
+       ========================================================================== */
+    .fixed-player-wrapper {
+      position: fixed;
+      bottom: 1rem;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(94vw, 1440px);
+      z-index: 5000;
+      transition: transform 0.35s var(--ease-smooth);
+    }
+    .fixed-player-wrapper.collapsed {
+      transform: translateX(-50%) translateY(calc(100% - 18px));
+    }
+
+    .player-dock-bar {
+      background: var(--glass-bg);
+      backdrop-filter: blur(24px) saturate(180%);
+      -webkit-backdrop-filter: blur(24px) saturate(180%);
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 24px rgba(245, 179, 53, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+      border-radius: 9999px;
+      padding: 0.65rem 1.4rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.25rem;
+      color: var(--text-cream);
+    }
+
+    /* Left: Track Info & Artwork */
+    .player-left-group {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      min-width: 220px;
+      max-width: 280px;
+    }
+    .player-art-thumbnail {
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid rgba(245, 179, 53, 0.4);
+      background: #3d0c13;
+      flex-shrink: 0;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    }
+    .player-art-thumbnail img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .player-text-meta {
+      overflow: hidden;
+    }
+    .player-song-title {
+      font-size: 0.9375rem;
+      font-weight: 700;
+      color: #faf0db;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .player-heart-toggle {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: rgba(255, 243, 224, 0.6);
+      font-size: 1rem;
+      transition: color 0.2s, transform 0.2s;
+      padding: 0 2px;
+      line-height: 1;
+    }
+    .player-heart-toggle:hover {
+      color: var(--amber-gold);
+      transform: scale(1.2);
+    }
+    .player-heart-toggle.favorited {
+      color: var(--red-rose);
+    }
+    .player-song-subtitle {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-top: 1px;
+    }
+
+    /* Center-Left: Spinning Cassette Reels Window + Gold Equalizer */
+    .player-cassette-indicator {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      flex-shrink: 0;
+    }
+    .mini-deck-spools {
+      width: 58px;
+      height: 28px;
+      background: #140305;
+      border: 1.5px solid rgba(245, 179, 53, 0.35);
+      border-radius: 9999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 0 6px;
+    }
+    .mini-deck-reel {
+      width: 14px;
+      height: 14px;
+      border: 1.5px dashed var(--amber-gold);
+      border-radius: 50%;
+    }
+    .playing .mini-deck-reel {
+      animation: spinReel 1.8s linear infinite;
+    }
+
+    /* Retro Audio Equalizer Bars */
+    .retro-eq-bars {
+      display: flex;
+      align-items: center;
+      gap: 2.5px;
+      height: 18px;
+      width: 24px;
+    }
+    .eq-bar-stick {
+      width: 3px;
+      height: 4px;
+      background: var(--amber-gold);
+      border-radius: 1px;
+      transition: height 0.15s ease;
+    }
+    .playing .eq-bar-stick:nth-child(1) { animation: eqAnim 0.75s infinite ease-in-out alternate; }
+    .playing .eq-bar-stick:nth-child(2) { animation: eqAnim 0.5s 0.15s infinite ease-in-out alternate; }
+    .playing .eq-bar-stick:nth-child(3) { animation: eqAnim 0.9s 0.05s infinite ease-in-out alternate; }
+    .playing .eq-bar-stick:nth-child(4) { animation: eqAnim 0.6s 0.25s infinite ease-in-out alternate; }
+    .playing .eq-bar-stick:nth-child(5) { animation: eqAnim 0.8s 0.1s infinite ease-in-out alternate; }
+    @keyframes eqAnim {
+      0% { height: 3px; }
+      100% { height: 18px; }
+    }
+
+    /* Center Controls Group */
+    .player-center-controls {
+      display: flex;
+      align-items: center;
+      gap: clamp(0.4rem, 1vw, 0.85rem);
+    }
+    .btn-ctrl {
+      background: none;
+      border: none;
+      color: rgba(255, 243, 224, 0.85);
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .btn-ctrl:hover, .btn-ctrl:focus-visible {
+      color: var(--amber-gold);
+      background: rgba(245, 179, 53, 0.12);
+      outline: none;
+    }
+    .btn-ctrl.btn-play-pause-main {
+      width: 44px;
+      height: 44px;
+      border: 1.5px solid var(--amber-gold);
+      background: rgba(245, 179, 53, 0.15);
+      color: var(--amber-gold);
+      box-shadow: 0 0 14px rgba(245, 179, 53, 0.3);
+    }
+    .btn-ctrl.btn-play-pause-main:hover {
+      background: var(--amber-gold);
+      color: #1e0508;
+      box-shadow: 0 0 22px rgba(245, 179, 53, 0.55);
+      transform: scale(1.06);
+    }
+
+    /* Progress Scrubber Cluster */
+    .player-progress-cluster {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex: 1;
+      max-width: 320px;
+    }
+    .player-timestamps {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      min-width: 76px;
+      white-space: nowrap;
+    }
+    .player-scrub-slider {
+      flex: 1;
+      height: 5px;
+      -webkit-appearance: none;
+      appearance: none;
+      background: rgba(255, 243, 224, 0.2);
+      border-radius: 9999px;
+      outline: none;
+      cursor: pointer;
+    }
+    .player-scrub-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--amber-gold);
+      box-shadow: 0 0 8px rgba(245, 179, 53, 0.8);
+      cursor: pointer;
+      transition: transform 0.1s;
+    }
+    .player-scrub-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.3);
+    }
+
+    /* Right Group: Volume + Playlist Selector + Collapse */
+    .player-right-group {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .player-vol-cluster {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .player-vol-slider {
+      width: 58px;
+      height: 4px;
+      -webkit-appearance: none;
+      appearance: none;
+      background: rgba(255, 243, 224, 0.2);
+      border-radius: 9999px;
+      cursor: pointer;
+    }
+    .player-vol-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--text-cream);
+    }
+
+    /* Playlist Selector Pill Button */
+    .player-playlist-select-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      background: rgba(245, 179, 53, 0.12);
+      border: 1px solid rgba(245, 179, 53, 0.35);
+      color: var(--text-cream);
+      font-family: var(--font-ui);
+      font-size: 0.8125rem;
+      font-weight: 600;
+      padding: 0.4rem 0.85rem;
+      border-radius: 9999px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+    .player-playlist-select-btn:hover {
+      background: rgba(245, 179, 53, 0.22);
+      border-color: var(--amber-gold);
+    }
+
+    .btn-player-collapse-toggle {
+      background: none;
+      border: none;
+      color: rgba(255, 243, 224, 0.6);
+      cursor: pointer;
+      padding: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.2s, transform 0.2s;
+    }
+    .btn-player-collapse-toggle:hover {
+      color: var(--amber-gold);
+    }
+    .collapsed .btn-player-collapse-toggle svg {
+      transform: rotate(180deg);
+    }
+
+    /* ==========================================================================
+       6. REWIND EASTER EGG / SECRET MODAL
+       ========================================================================== */
+    .secret-overlay-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(18, 3, 5, 0.88);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s ease;
+    }
+    .secret-overlay-modal.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .secret-letter-card {
+      background: #fcf6e8;
+      color: #3b1b0f;
+      border-radius: 12px;
+      max-width: 540px;
+      width: 100%;
+      padding: clamp(2rem, 5vw, 3rem);
+      box-shadow: 0 35px 80px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(0, 0, 0, 0.15);
+      position: relative;
+      transform: translateY(20px) scale(0.97);
+      transition: transform 0.35s var(--ease-smooth);
+    }
+    .secret-overlay-modal.open .secret-letter-card {
+      transform: translateY(0) scale(1);
+    }
+    .secret-stamp-mark {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      border: 2px dashed #992318;
+      color: #992318;
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      font-weight: 700;
+      padding: 0.25rem 0.65rem;
+      transform: rotate(6deg);
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+    .secret-letter-title {
+      font-family: var(--font-hand);
+      font-size: clamp(2.4rem, 4.5vw, 3.2rem);
+      color: #8c1e14;
+      line-height: 1.15;
+      font-weight: 700;
+      text-align: center;
+      margin: 1.25rem 0;
+    }
+    .secret-letter-body {
+      font-size: 0.95rem;
+      line-height: 1.65;
+      color: #5c3222;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .btn-secret-return {
+      display: block;
+      margin: 0 auto;
+      background: #381308;
+      color: #faf2dc;
+      border: none;
+      font-family: var(--font-ui);
+      font-weight: 700;
+      font-size: 0.875rem;
+      padding: 0.75rem 2rem;
+      border-radius: 9999px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .btn-secret-return:hover {
+      background: #8c1e14;
+      transform: translateY(-2px);
+    }
+
+    /* Screen VHS Tape Rewind Jitter */
+    body.is-rewinding-tape {
+      animation: rewindJitter 0.45s ease-in-out;
+    }
+    @keyframes rewindJitter {
+      0% { filter: contrast(100%); }
+      25% { filter: contrast(170%) brightness(130%) hue-rotate(15deg); transform: translate(-2px, 2px); }
+      50% { filter: contrast(130%) brightness(90%) hue-rotate(-10deg); transform: translate(3px, -2px); }
+      75% { filter: contrast(150%) brightness(120%); transform: translate(-1px, 1px); }
+      100% { filter: contrast(100%); transform: translate(0, 0); }
+    }
+
+    /* High-Fidelity YouTube Player Host: Standard 640x360 dimensions prevent YouTube ABR from throttling audio to 144p low-bitrate stream */
+    #yt-hidden-player {
+      position: fixed;
+      bottom: 0;
+      left: -9999px;
+      width: 640px;
+      height: 360px;
+      opacity: 0;
+      pointer-events: none;
+      z-index: -9999;
+    }
+
+    /* ==========================================================================
+       7. RESPONSIVE BREAKPOINTS
+       ========================================================================== */
+    @media (max-width: 1100px) {
+      .hero-layout-grid {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+      }
+      .hero-left-col {
+        text-align: left;
+      }
+      .mixtapes-cards-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .player-progress-cluster {
+        display: none;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .site-header {
+        height: 60px;
+        padding: 0 1rem;
+      }
+      .header-right-note {
+        display: none;
+      }
+      .nav-center {
+        gap: 1.25rem;
+      }
+      .mixtapes-cards-grid {
+        grid-template-columns: 1fr;
+        gap: 1.25rem;
+      }
+      .player-cassette-indicator, .player-vol-cluster {
+        display: none;
+      }
+      .player-left-group {
+        min-width: 160px;
+        max-width: 200px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Analog Film Grain SVG Filter -->
+  <svg class="film-grain-layer" aria-hidden="true" width="100%" height="100%">
+    <filter id="retroGrain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.82" numOctaves="3" stitchTiles="stitch" />
+      <feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.06 0" />
+    </filter>
+    <rect width="100%" height="100%" filter="url(#retroGrain)" />
+  </svg>
+
+  <div class="vignette-layer" aria-hidden="true"></div>
+
+  <!-- Offscreen 1x1 host for YouTube Iframe API -->
+  <div id="yt-hidden-player" aria-hidden="true"></div>
+
+  <!-- ==========================================================================
+       HEADER (SLIM FULL-WIDTH BURGUNDY TEXTURED HEADER)
+       ========================================================================== -->
+  <header class="site-header" role="banner">
+    <!-- Left: Handwritten-style logo -->
+    <a href="#home" class="brand-logo" aria-label="Cassette Wala Pyaar Home">
+      <svg class="brand-cassette-svg" viewBox="0 0 24 16" aria-hidden="true">
+        <rect x="1" y="1" width="22" height="14" rx="2.5" />
+        <circle cx="7" cy="8" r="2.2" />
+        <circle cx="17" cy="8" r="2.2" />
+        <line x1="9.5" y1="8" x2="14.5" y2="8" />
+      </svg>
+      <span class="brand-title">
+        Cassette Wala Pyaar <span class="brand-heart-doodle">♡</span>
+      </span>
+    </a>
+
+    <!-- Center: Navigation (Home, Mixtapes, Yaadein, Radio) -->
+    <nav class="nav-center" aria-label="Main Navigation">
+      <a href="#home" class="nav-item active" id="navHome">Home</a>
+      <a href="#mixtapes" class="nav-item" id="navMixtapes">Mixtapes</a>
+      <a href="#yaadein" class="nav-item" id="navYaadein">Yaadein</a>
+      <a href="#radio" class="nav-item" id="navRadio">Radio</a>
+    </nav>
+
+    <!-- Right: Handwritten Hindi/English quote & cassette icon -->
+    <div class="header-right-note" aria-hidden="true">
+      <span>Purane gaane<br>hamesha naye<br>lagte hain...</span>
+      <div class="header-right-icons">
+        <span style="font-family: var(--font-hand); font-size: 1.4rem;">♡</span>
+        <svg class="brand-cassette-svg" viewBox="0 0 24 16">
+          <rect x="1" y="1" width="22" height="14" rx="2.5" />
+          <circle cx="7" cy="8" r="2.2" />
+          <circle cx="17" cy="8" r="2.2" />
+        </svg>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ========================================================================
+         HERO SECTION (EXACT COMPOSITION TO REFERENCE SCREENSHOT)
+         ======================================================================== -->
+    <section class="hero-container" id="home" aria-labelledby="hero-headline">
+      <div class="hero-layout-grid">
+        <!-- Left Column: Expressive Headline & CTA -->
+        <div class="hero-left-col">
+          <h1 id="hero-headline" class="hero-main-title">
+            GAANE PURANE,<br>
+            <span class="highlight-line">FEELINGS NAYE</span>
+            <svg class="hero-title-heart-doodle" viewBox="0 0 44 18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+              <path d="M2 10 Q14 16 22 15 Q34 14 42 8" />
+              <path d="M22 6 C20 2, 17 2, 17 5 C17 8, 22 11, 22 11 C22 11, 27 8, 27 5 C27 2, 24 2, 22 6 Z" fill="currentColor" />
+            </svg>
+          </h1>
+
+          <p class="hero-subtitle">
+            Har cassette mein ek kahaani.
+          </p>
+
+          <button type="button" class="btn-rewind-heart" id="btnRewindHeart" aria-label="Rewind tape and open secret love letter">
+            <svg class="btn-rewind-icon" viewBox="0 0 24 16" aria-hidden="true">
+              <rect x="1" y="1" width="22" height="14" rx="2" />
+              <circle cx="7" cy="8" r="2" />
+              <circle cx="17" cy="8" r="2" />
+            </svg>
+            <span>REWIND MY HEART</span>
+            <span class="btn-rewind-arrow">→</span>
+          </button>
+        </div>
+
+        <!-- Right Column: Cinematic Scene with Vintage Cassette, Rose, Stacked Tapes -->
+        <div class="hero-right-col">
+          <div class="hero-scene-frame" id="heroSceneCard">
+            <img 
+              src="/src/assets/images/hero_cassette_scene_1791734858245.jpg" 
+              alt="Vintage audio cassette titled 'Cassette Wala Pyaar' beside a red rose, cutting chai, and stacked retro tapes on maroon tablecloth" 
+              class="hero-scene-img"
+              referrerPolicy="no-referrer"
+            />
+            <div class="hero-scene-overlay" aria-hidden="true"></div>
+
+            <!-- Rotating Spool Gears overlay synced with playback -->
+            <div class="hero-live-reels-indicator" aria-hidden="true">
+              <div class="hero-live-spool"></div>
+              <div class="hero-live-spool"></div>
+            </div>
+
+            <!-- Floating Note Matching Reference: Same songs, new feelings ♡ -->
+            <div class="hero-tape-floating-note">
+              <span>Same songs, new feelings</span>
+              <span style="color: var(--amber-gold);">♡</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         FEATURED MIXTAPES (4 RETRO CARDS FROM REFERENCE SCREENSHOT)
+         ======================================================================== -->
+    <section class="mixtapes-section" id="mixtapes" aria-labelledby="featured-mixtapes-heading">
+      <!-- Torn-Paper Style Header Label -->
+      <div class="section-label-banner">
+        <svg class="section-label-cassette-icon" viewBox="0 0 24 16" aria-hidden="true">
+          <rect x="1" y="1" width="22" height="14" rx="2" />
+          <circle cx="7" cy="8" r="2" />
+          <circle cx="17" cy="8" r="2" />
+        </svg>
+        <span id="featured-mixtapes-heading">FEATURED MIXTAPES</span>
+        <span class="section-label-arrow">↴</span>
+      </div>
+
+      <!-- 4 Horizontal Cassette Cards -->
+      <div class="mixtapes-cards-grid">
+        <!-- 1. Pehla Pyaar -->
+        <div class="mixtape-card active-mixtape" data-mixtape-id="pehla-pyaar" role="button" tabindex="0" aria-label="Select Pehla Pyaar Mixtape">
+          <div class="mixtape-card-artwork">
+            <img 
+              src="/src/assets/images/mixtape_pehla_pyaar_1791734790833.jpg" 
+              alt="Pehla Pyaar retro Bollywood cassette cover" 
+              class="mixtape-card-img"
+              referrerPolicy="no-referrer"
+            />
+            <div class="mixtape-card-plastic-overlay"></div>
+            <div class="mixtape-active-badge">● NOW PLAYING</div>
+          </div>
+          <div class="mixtape-card-footer">
+            <div class="mixtape-info-col">
+              <h3>Pehla Pyaar</h3>
+              <p>ROMANCE · LOVE · EVERGREEN</p>
+            </div>
+            <div class="mixtape-play-icon-btn" aria-hidden="true">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Raat Bhar -->
+        <div class="mixtape-card" data-mixtape-id="raat-bhar" role="button" tabindex="0" aria-label="Select Raat Bhar Mixtape">
+          <div class="mixtape-card-artwork">
+            <img 
+              src="/src/assets/images/mixtape_raat_bhar_1791734803574.jpg" 
+              alt="Raat Bhar retro Bollywood cassette cover" 
+              class="mixtape-card-img"
+              referrerPolicy="no-referrer"
+            />
+            <div class="mixtape-card-plastic-overlay"></div>
+            <div class="mixtape-active-badge">● NOW PLAYING</div>
+          </div>
+          <div class="mixtape-card-footer">
+            <div class="mixtape-info-col">
+              <h3>Raat Bhar</h3>
+              <p>LATE NIGHT · MOODS · CLASSICS</p>
+            </div>
+            <div class="mixtape-play-icon-btn" aria-hidden="true">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Dil Se -->
+        <div class="mixtape-card" data-mixtape-id="dil-se" role="button" tabindex="0" aria-label="Select Dil Se Mixtape">
+          <div class="mixtape-card-artwork">
+            <img 
+              src="/src/assets/images/mixtape_dil_se_1791734926916.jpg" 
+              alt="Dil Se retro Bollywood cassette cover" 
+              class="mixtape-card-img"
+              referrerPolicy="no-referrer"
+            />
+            <div class="mixtape-card-plastic-overlay"></div>
+            <div class="mixtape-active-badge">● NOW PLAYING</div>
+          </div>
+          <div class="mixtape-card-footer">
+            <div class="mixtape-info-col">
+              <h3>Dil Se</h3>
+              <p>ROMANTIC · HEARTBREAK · TIMELESS ♡</p>
+            </div>
+            <div class="mixtape-play-icon-btn" aria-hidden="true">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. Disco Deewane -->
+        <div class="mixtape-card" data-mixtape-id="disco-deewane" role="button" tabindex="0" aria-label="Select Disco Deewane Mixtape">
+          <div class="mixtape-card-artwork">
+            <img 
+              src="/src/assets/images/mixtape_disco_deewane_1791734825172.jpg" 
+              alt="Disco Deewane retro Bollywood cassette cover" 
+              class="mixtape-card-img"
+              referrerPolicy="no-referrer"
+            />
+            <div class="mixtape-card-plastic-overlay"></div>
+            <div class="mixtape-active-badge">● NOW PLAYING</div>
+          </div>
+          <div class="mixtape-card-footer">
+            <div class="mixtape-info-col">
+              <h3>Disco Deewane</h3>
+              <p>DANCE · PARTY · 90s VIBES</p>
+            </div>
+            <div class="mixtape-play-icon-btn" aria-hidden="true">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Yaadein Section Anchor for Smooth Navigation -->
+    <div id="yaadein" style="height: 1px; margin-top: -30px;"></div>
+    <div id="radio" style="height: 1px;"></div>
+  </main>
+
+  <!-- ========================================================================
+       FIXED BOTTOM RETRO MUSIC PLAYER (FROSTED GLASS DOCK FROM SCREENSHOT)
+       ======================================================================== -->
+  <aside class="fixed-player-wrapper" id="playerDockWrapper" aria-label="Retro Cassette Music Player">
+    <div class="player-dock-bar">
+      <!-- Left: Album artwork, title, subtitle & favorite button -->
+      <div class="player-left-group">
+        <div class="player-art-thumbnail">
+          <img 
+            id="playerThumbImg" 
+            src="/src/assets/images/mixtape_pehla_pyaar_1791734790833.jpg" 
+            alt="Current track cassette artwork"
+            referrerPolicy="no-referrer"
+          />
+        </div>
+        <div class="player-text-meta">
+          <div class="player-song-title">
+            <span id="playerSongTitle">Pehla Nasha</span>
+            <button type="button" class="player-heart-toggle" id="playerHeartBtn" aria-label="Add to favorites">♡</button>
+          </div>
+          <div class="player-song-subtitle" id="playerSubtitle">90s Bollywood Radio</div>
+        </div>
+      </div>
+
+      <!-- Center-Left: Spinning Cassette Reels + Equalizer Bars -->
+      <div class="player-cassette-indicator" aria-hidden="true">
+        <div class="mini-deck-spools">
+          <div class="mini-deck-reel"></div>
+          <div class="mini-deck-reel"></div>
+        </div>
+
+        <div class="retro-eq-bars">
+          <div class="eq-bar-stick"></div>
+          <div class="eq-bar-stick"></div>
+          <div class="eq-bar-stick"></div>
+          <div class="eq-bar-stick"></div>
+          <div class="eq-bar-stick"></div>
+        </div>
+      </div>
+
+      <!-- Center: Shuffle, Prev, Play/Pause, Next Controls -->
+      <div class="player-center-controls">
+        <button type="button" class="btn-ctrl" id="btnShuffle" aria-label="Toggle shuffle">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
+        </button>
+
+        <button type="button" class="btn-ctrl" id="btnPrev" aria-label="Previous track">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
+        </button>
+
+        <button type="button" class="btn-ctrl btn-play-pause-main" id="btnPlayPause" aria-label="Play or pause audio">
+          <svg id="iconPlay" width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          <svg id="iconPause" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="display:none;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+        </button>
+
+        <button type="button" class="btn-ctrl" id="btnNext" aria-label="Next track">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
+        </button>
+      </div>
+
+      <!-- Progress Scrub Bar & Timestamps -->
+      <div class="player-progress-cluster">
+        <div class="player-timestamps" id="playerTimestamps">2:34 / 5:48</div>
+        <input type="range" class="player-scrub-slider" id="playerScrubber" min="0" max="100" value="44" aria-label="Seek track position">
+      </div>
+
+      <!-- Right: Volume + Playlist Selector + Collapse Toggle -->
+      <div class="player-right-group">
+        <div class="player-vol-cluster">
+          <button type="button" class="btn-ctrl" id="btnMute" style="width:30px; height:30px;" aria-label="Mute or unmute volume">
+            <svg id="iconVolHigh" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+            <svg id="iconVolMuted" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="display:none;"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27l4.73 4.73H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>
+          </button>
+          <input type="range" class="player-vol-slider" id="playerVolSlider" min="0" max="100" value="100" aria-label="Adjust volume">
+        </div>
+
+        <!-- Playlist Switcher Button Matching Screenshot: "90s Bollywood Hits ⌄" -->
+        <button type="button" class="player-playlist-select-btn" id="btnPlaylistSelector" aria-label="Switch active mixtape playlist">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          <span id="currentPlaylistLabel">90s Bollywood Hits</span>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>
+        </button>
+
+        <!-- Expand / Collapse Toggle Caret -->
+        <button type="button" class="btn-player-collapse-toggle" id="btnCollapseToggle" aria-label="Expand or collapse music player dock">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ========================================================================
+       REWIND EASTER EGG LOVE LETTER MODAL
+       ======================================================================== -->
+  <div class="secret-overlay-modal" id="secretModal" role="dialog" aria-modal="true" aria-labelledby="secretLetterHeading" aria-hidden="true">
+    <div class="secret-letter-card">
+      <div class="secret-stamp-mark">BALCONY · 1996</div>
+      
+      <h2 id="secretLetterHeading" class="secret-letter-title">
+        "Tum bhi kisi ke liye mixtape ho."
+      </h2>
+
+      <p class="secret-letter-body">
+        Kisi ne tumhare liye bhi radio ke paas baithkar, ungli REC button par dabaye,
+        saari raat intezaar kiya hoga. Har gaana ek naya ehsaas leke aata hai — purane gaane, feelings naye.
+      </p>
+
+      <button type="button" class="btn-secret-return" id="btnSecretReturn">
+        Wapas Gaana Suno (Return)
+      </button>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       CLIENT APPLICATION LOGIC (VANILLA JS IIFE)
+       ======================================================================== -->
+  <script>
+    (function () {
+      'use strict';
+
+      /* --- 1. MIXTAPE CONFIGURATIONS & YOUTUBE INTEGRATION --- */
+      const MIXTAPES = {
+        'pehla-pyaar': {
+          title: 'Pehla Nasha',
+          subtitle: '90s Bollywood Radio · Evergreen Romance',
+          tag: 'ROMANCE · LOVE · EVERGREEN',
+          label: '90s Bollywood Hits',
+          thumb: '/src/assets/images/mixtape_pehla_pyaar_1791734790833.jpg',
+          // User provided romantic mixtape
+          videoId: 'gFyZGsTR1FI',
+          url: 'https://youtu.be/gFyZGsTR1FI',
+          isPlaylist: false
+        },
+        'raat-bhar': {
+          title: 'Raat Bhar Melodies',
+          subtitle: 'Late Night Ghazals & Melodies',
+          tag: 'LATE NIGHT · MOODS · CLASSICS',
+          label: 'Raat Bhar Mixtape',
+          thumb: '/src/assets/images/mixtape_raat_bhar_1791734803574.jpg',
+          // User provided URL: https://youtu.be/ebw1zHtleFY?si=ouK2C_7dqxDqwqPe
+          videoId: 'ebw1zHtleFY',
+          url: 'https://youtu.be/ebw1zHtleFY?si=ouK2C_7dqxDqwqPe',
+          isPlaylist: false
+        },
+        'dil-se': {
+          title: 'Dil Se Re — Evergreen',
+          subtitle: 'Romantic & Heartbreak Melodies',
+          tag: 'ROMANTIC · HEARTBREAK · TIMELESS ♡',
+          label: 'Dil Se Mixtape',
+          thumb: '/src/assets/images/mixtape_dil_se_1791734926916.jpg',
+          // User provided URL: https://youtu.be/9JJuXIi5YAU?si=USNzGpuMVVDoaY-p
+          videoId: '9JJuXIi5YAU',
+          url: 'https://youtu.be/9JJuXIi5YAU?si=USNzGpuMVVDoaY-p',
+          isPlaylist: false
+        },
+        'disco-deewane': {
+          title: 'Disco Deewane 90s Hits',
+          subtitle: 'Retro Dance & Party Hits',
+          tag: 'DANCE · PARTY · 90s VIBES',
+          label: 'Disco Deewane Mixtape',
+          thumb: '/src/assets/images/mixtape_disco_deewane_1791734825172.jpg',
+          // User provided URL: https://youtu.be/xp5j2IHyTgs?si=9WrrlhixL6idjBwV
+          videoId: 'xp5j2IHyTgs',
+          url: 'https://youtu.be/xp5j2IHyTgs?si=9WrrlhixL6idjBwV',
+          isPlaylist: false
+        }
+      };
+
+      let activeMixtapeId = 'pehla-pyaar';
+      let ytPlayer = null;
+      let isPlaying = false;
+      let pollTimer = null;
+      let audioCtx = null;
+
+      // DOM Elements
+      const playerDockWrapper = document.getElementById('playerDockWrapper');
+      const playerThumbImg = document.getElementById('playerThumbImg');
+      const playerSongTitle = document.getElementById('playerSongTitle');
+      const playerSubtitle = document.getElementById('playerSubtitle');
+      const currentPlaylistLabel = document.getElementById('currentPlaylistLabel');
+      const playerHeartBtn = document.getElementById('playerHeartBtn');
+      const btnPlayPause = document.getElementById('btnPlayPause');
+      const iconPlay = document.getElementById('iconPlay');
+      const iconPause = document.getElementById('iconPause');
+      const btnPrev = document.getElementById('btnPrev');
+      const btnNext = document.getElementById('btnNext');
+      const btnShuffle = document.getElementById('btnShuffle');
+      const playerScrubber = document.getElementById('playerScrubber');
+      const playerTimestamps = document.getElementById('playerTimestamps');
+      const playerVolSlider = document.getElementById('playerVolSlider');
+      const btnMute = document.getElementById('btnMute');
+      const iconVolHigh = document.getElementById('iconVolHigh');
+      const iconVolMuted = document.getElementById('iconVolMuted');
+      const btnPlaylistSelector = document.getElementById('btnPlaylistSelector');
+      const btnCollapseToggle = document.getElementById('btnCollapseToggle');
+      const btnRewindHeart = document.getElementById('btnRewindHeart');
+      const secretModal = document.getElementById('secretModal');
+      const btnSecretReturn = document.getElementById('btnSecretReturn');
+
+      function formatTime(seconds) {
+        const s = Math.floor(seconds || 0);
+        const mins = Math.floor(s / 60);
+        const rem = s % 60;
+        return `${mins}:${rem < 10 ? '0' : ''}${rem}`;
+      }
+
+      function updatePlayingVisuals(playing) {
+        isPlaying = playing;
+        if (playing) {
+          document.body.classList.add('playing');
+          if (iconPlay) iconPlay.style.display = 'none';
+          if (iconPause) iconPause.style.display = 'block';
+          startPolling();
+        } else {
+          document.body.classList.remove('playing');
+          if (iconPlay) iconPlay.style.display = 'block';
+          if (iconPause) iconPause.style.display = 'none';
+          stopPolling();
+        }
+      }
+
+      function startPolling() {
+        stopPolling();
+        pollTimer = setInterval(() => {
+          if (!ytPlayer || typeof ytPlayer.getCurrentTime !== 'function') return;
+          try {
+            const current = ytPlayer.getCurrentTime();
+            const duration = ytPlayer.getDuration();
+            if (duration > 0) {
+              if (playerScrubber && !playerScrubber.matches(':active')) {
+                playerScrubber.value = (current / duration) * 100;
+              }
+              if (playerTimestamps) {
+                playerTimestamps.textContent = `${formatTime(current)} / ${formatTime(duration)}`;
+              }
+            }
+            const videoData = ytPlayer.getVideoData ? ytPlayer.getVideoData() : null;
+            if (videoData && videoData.title && !videoData.title.includes('YouTube') && playerSongTitle) {
+              playerSongTitle.textContent = videoData.title.length > 32 ? videoData.title.substring(0, 32) + '...' : videoData.title;
+            }
+          } catch (e) {
+            // Player switching state
+          }
+        }, 750);
+      }
+
+      function stopPolling() {
+        if (pollTimer) clearInterval(pollTimer);
+      }
+
+      /* --- 2. SELECT & SWITCH MIXTAPE --- */
+      function switchMixtape(id) {
+        if (!MIXTAPES[id]) return;
+        activeMixtapeId = id;
+        const tape = MIXTAPES[id];
+
+        // Update card active classes
+        document.querySelectorAll('.mixtape-card').forEach((card) => {
+          if (card.dataset.mixtapeId === id) {
+            card.classList.add('active-mixtape');
+          } else {
+            card.classList.remove('active-mixtape');
+          }
+        });
+
+        // Update player dock
+        if (playerThumbImg) playerThumbImg.src = tape.thumb;
+        if (playerSongTitle) playerSongTitle.textContent = tape.title;
+        if (playerSubtitle) playerSubtitle.textContent = tape.subtitle;
+        if (currentPlaylistLabel) currentPlaylistLabel.textContent = tape.label;
+
+        // Reset scrubber & timer display
+        if (playerScrubber) playerScrubber.value = 0;
+        if (playerTimestamps) playerTimestamps.textContent = '0:00 / --:--';
+
+        // Load into YouTube API with high-quality stream tier request
+        if (ytPlayer && typeof ytPlayer.loadVideoById === 'function') {
+          ytPlayer.loadVideoById({
+            videoId: tape.videoId,
+            suggestedQuality: 'hd720'
+          });
+          updatePlayingVisuals(true);
+        }
+      }
+
+      // Mixtape card click handlers
+      document.querySelectorAll('.mixtape-card').forEach((card) => {
+        card.addEventListener('click', () => {
+          const id = card.dataset.mixtapeId;
+          switchMixtape(id);
+        });
+        card.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            switchMixtape(card.dataset.mixtapeId);
+          }
+        });
+      });
+
+      // Playlist selector toggle button in player
+      if (btnPlaylistSelector) {
+        btnPlaylistSelector.addEventListener('click', () => {
+          const keys = Object.keys(MIXTAPES);
+          const nextIndex = (keys.indexOf(activeMixtapeId) + 1) % keys.length;
+          switchMixtape(keys[nextIndex]);
+        });
+      }
+
+      /* --- 3. YOUTUBE IFRAME API INITIALIZATION (HIGH-FIDELITY CONFIG) --- */
+      window.onYouTubeIframeAPIReady = function () {
+        try {
+          ytPlayer = new YT.Player('yt-hidden-player', {
+            height: '360',
+            width: '640',
+            videoId: MIXTAPES[activeMixtapeId].videoId,
+            playerVars: {
+              autoplay: 0,
+              controls: 0,
+              modestbranding: 1,
+              rel: 0,
+              playsinline: 1,
+              origin: window.location.origin
+            },
+            events: {
+              onReady: function (event) {
+                // Ensure audio is at unattenuated 100% volume by default
+                const vol = playerVolSlider ? parseInt(playerVolSlider.value, 10) : 100;
+                event.target.setVolume(vol);
+
+                // Request high-quality stream so YouTube serves 128-160kbps audio rather than 48kbps 144p tier
+                if (typeof event.target.setPlaybackQuality === 'function') {
+                  event.target.setPlaybackQuality('hd720');
+                }
+
+                const vData = event.target.getVideoData ? event.target.getVideoData() : null;
+                if (vData && vData.title && !vData.title.includes('YouTube') && playerSongTitle) {
+                  playerSongTitle.textContent = vData.title.length > 32 ? vData.title.substring(0, 32) + '...' : vData.title;
+                }
+              },
+              onStateChange: function (event) {
+                if (event.data === 1) { // PLAYING
+                  updatePlayingVisuals(true);
+                  if (typeof event.target.setPlaybackQuality === 'function') {
+                    event.target.setPlaybackQuality('hd720');
+                  }
+                } else if (event.data === 2 || event.data === 0) { // PAUSED or ENDED
+                  updatePlayingVisuals(false);
+                }
+              },
+              onError: function (event) {
+                const tape = MIXTAPES[activeMixtapeId];
+                if (playerSongTitle && tape) {
+                  playerSongTitle.textContent = tape.title;
+                }
+                if (playerSubtitle && tape) {
+                  playerSubtitle.innerHTML = `<span style="color:var(--amber-gold);">Embedding restricted</span> · <a href="${tape.url}" target="_blank" rel="noopener noreferrer" style="color:var(--amber-gold); text-decoration:underline;">Listen on YouTube ↗</a>`;
+                }
+              }
+            }
+          });
+        } catch (e) {
+          console.warn('YouTube Player initialization fallback', e);
+        }
+      };
+
+      const tag = document.createElement('script');
+      tag.src = "https://www.youtube.com/iframe_api";
+      const firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+      // Play / Pause Toggle
+      function togglePlayPause() {
+        if (!ytPlayer || typeof ytPlayer.getPlayerState !== 'function') {
+          updatePlayingVisuals(!isPlaying);
+          return;
+        }
+        try {
+          const state = ytPlayer.getPlayerState();
+          if (state === 1) {
+            ytPlayer.pauseVideo();
+          } else {
+            ytPlayer.playVideo();
+          }
+        } catch (e) {
+          updatePlayingVisuals(!isPlaying);
+        }
+      }
+
+      if (btnPlayPause) btnPlayPause.addEventListener('click', togglePlayPause);
+
+      // Prev & Next skip
+      if (btnPrev) {
+        btnPrev.addEventListener('click', () => {
+          if (ytPlayer && typeof ytPlayer.getCurrentTime === 'function') {
+            const cur = ytPlayer.getCurrentTime();
+            ytPlayer.seekTo(Math.max(0, cur - 15), true);
+          }
+        });
+      }
+
+      if (btnNext) {
+        btnNext.addEventListener('click', () => {
+          if (ytPlayer && typeof ytPlayer.getCurrentTime === 'function') {
+            const cur = ytPlayer.getCurrentTime();
+            const dur = ytPlayer.getDuration();
+            ytPlayer.seekTo(Math.min(dur || cur + 15, cur + 15), true);
+          }
+        });
+      }
+
+      // Scrubber seek
+      if (playerScrubber) {
+        playerScrubber.addEventListener('input', (e) => {
+          if (!ytPlayer || typeof ytPlayer.getDuration !== 'function') return;
+          const dur = ytPlayer.getDuration();
+          if (dur > 0) {
+            const sec = (e.target.value / 100) * dur;
+            if (playerTimestamps) playerTimestamps.textContent = `${formatTime(sec)} / ${formatTime(dur)}`;
+          }
+        });
+        playerScrubber.addEventListener('change', (e) => {
+          if (!ytPlayer || typeof ytPlayer.getDuration !== 'function') return;
+          const dur = ytPlayer.getDuration();
+          if (dur > 0) {
+            const sec = (e.target.value / 100) * dur;
+            ytPlayer.seekTo(sec, true);
+          }
+        });
+      }
+
+      // Volume slider & mute
+      if (playerVolSlider) {
+        playerVolSlider.addEventListener('input', (e) => {
+          const val = parseInt(e.target.value, 10);
+          if (ytPlayer && typeof ytPlayer.setVolume === 'function') {
+            ytPlayer.setVolume(val);
+            if (val === 0 && ytPlayer.mute) ytPlayer.mute();
+            else if (ytPlayer.unMute) ytPlayer.unMute();
+          }
+          if (iconVolHigh && iconVolMuted) {
+            if (val === 0) {
+              iconVolHigh.style.display = 'none';
+              iconVolMuted.style.display = 'block';
+            } else {
+              iconVolHigh.style.display = 'block';
+              iconVolMuted.style.display = 'none';
+            }
+          }
+        });
+      }
+
+      if (btnMute) {
+        btnMute.addEventListener('click', () => {
+          if (!ytPlayer || typeof ytPlayer.isMuted !== 'function') return;
+          const isMuted = ytPlayer.isMuted();
+          if (isMuted) {
+            ytPlayer.unMute();
+            if (iconVolHigh) iconVolHigh.style.display = 'block';
+            if (iconVolMuted) iconVolMuted.style.display = 'none';
+            if (playerVolSlider) playerVolSlider.value = ytPlayer.getVolume() || 80;
+          } else {
+            ytPlayer.mute();
+            if (iconVolHigh) iconVolHigh.style.display = 'none';
+            if (iconVolMuted) iconVolMuted.style.display = 'block';
+            if (playerVolSlider) playerVolSlider.value = 0;
+          }
+        });
+      }
+
+      // Favorite heart toggle button
+      if (playerHeartBtn) {
+        playerHeartBtn.addEventListener('click', () => {
+          playerHeartBtn.classList.toggle('favorited');
+          if (playerHeartBtn.classList.contains('favorited')) {
+            playerHeartBtn.textContent = '♥';
+          } else {
+            playerHeartBtn.textContent = '♡';
+          }
+        });
+      }
+
+      // Player expand / collapse toggle button
+      if (btnCollapseToggle && playerDockWrapper) {
+        btnCollapseToggle.addEventListener('click', () => {
+          playerDockWrapper.classList.toggle('collapsed');
+        });
+      }
+
+      /* --- 4. REWIND EASTER EGG (WEB AUDIO SYNTH MOTOR + MODAL) --- */
+      function playSynthesizedRewindSound() {
+        const AudioClass = window.AudioContext || window.webkitAudioContext;
+        if (!AudioClass) return;
+        if (!audioCtx) audioCtx = new AudioClass();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+
+        const now = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(320, now);
+        osc.frequency.exponentialRampToValueAtTime(1400, now + 0.4);
+        osc.frequency.exponentialRampToValueAtTime(380, now + 0.9);
+
+        gain.gain.setValueAtTime(0.01, now);
+        gain.gain.linearRampToValueAtTime(0.18, now + 0.1);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.9);
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(now);
+        osc.stop(now + 0.9);
+      }
+
+      function triggerRewindAction() {
+        playSynthesizedRewindSound();
+        document.body.classList.add('is-rewinding-tape');
+
+        setTimeout(() => {
+          document.body.classList.remove('is-rewinding-tape');
+          if (secretModal) {
+            secretModal.classList.add('open');
+            secretModal.setAttribute('aria-hidden', 'false');
+            if (btnSecretReturn) btnSecretReturn.focus();
+          }
+        }, 550);
+      }
+
+      if (btnRewindHeart) {
+        btnRewindHeart.addEventListener('click', triggerRewindAction);
+      }
+
+      if (btnSecretReturn && secretModal) {
+        btnSecretReturn.addEventListener('click', () => {
+          secretModal.classList.remove('open');
+          secretModal.setAttribute('aria-hidden', 'true');
+        });
+        secretModal.addEventListener('click', (e) => {
+          if (e.target === secretModal) {
+            secretModal.classList.remove('open');
+            secretModal.setAttribute('aria-hidden', 'true');
+          }
+        });
+      }
+
+      window.addEventListener('keydown', (e) => {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+        if (e.key === 'r' || e.key === 'R') {
+          triggerRewindAction();
+        }
+      });
+
+      /* --- 5. SMOOTH NAV HIGHLIGHTING --- */
+      const navLinks = document.querySelectorAll('.nav-item');
+      navLinks.forEach((link) => {
+        link.addEventListener('click', () => {
+          navLinks.forEach(n => n.classList.remove('active'));
+          link.classList.add('active');
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

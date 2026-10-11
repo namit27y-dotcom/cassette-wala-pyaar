@@ -1,0 +1,8 @@
+{
+  "name": "Cassette Wala Pyaar",
+  "description": "A nostalgic digital time capsule celebrating love in the cassette era of India with an interactive mixtape, handwritten memories, and real music player.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
