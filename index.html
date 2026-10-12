@@ -478,6 +478,378 @@
       font-size: 1rem;
     }
 
+    /* ==========================================================================
+       SONG SEARCH / GEMINI CASSETTE FINDER
+       ========================================================================== */
+    .song-search-section {
+      margin-bottom: clamp(2.5rem, 5vw, 3.5rem);
+    }
+    .search-cassette-box {
+      background: linear-gradient(145deg, #24050a 0%, #170205 100%);
+      border: 1px solid rgba(245, 179, 53, 0.35);
+      border-radius: 18px;
+      padding: clamp(1.25rem, 3vw, 2.25rem);
+      box-shadow: 0 16px 45px rgba(0, 0, 0, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      position: relative;
+      overflow: hidden;
+    }
+    .search-cassette-box::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--amber-gold), #c43849, transparent);
+    }
+    .search-cassette-header {
+      margin-bottom: 1.15rem;
+    }
+    .search-title-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.35rem;
+    }
+    .search-cassette-icon {
+      width: 24px;
+      height: 16px;
+      stroke: var(--amber-gold);
+      fill: none;
+      stroke-width: 2;
+    }
+    .search-heading {
+      font-family: var(--font-headline);
+      font-size: clamp(1.3rem, 2.6vw, 1.85rem);
+      font-weight: 800;
+      color: #faf0db;
+      letter-spacing: -0.01em;
+      margin: 0;
+    }
+    .ai-gemini-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: rgba(245, 179, 53, 0.14);
+      color: var(--amber-gold);
+      border: 1px solid rgba(245, 179, 53, 0.35);
+      padding: 0.2rem 0.65rem;
+      border-radius: 9999px;
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .search-subtitle {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      line-height: 1.5;
+      margin: 0;
+      max-width: 780px;
+    }
+    .search-form-bar {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 1.1rem;
+      margin-bottom: 0.95rem;
+    }
+    .search-input-wrapper {
+      flex: 1;
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .search-lens-icon {
+      position: absolute;
+      left: 1rem;
+      width: 18px;
+      height: 18px;
+      color: var(--amber-gold);
+      pointer-events: none;
+      opacity: 0.85;
+    }
+    .search-input-field {
+      width: 100%;
+      background: rgba(10, 1, 3, 0.85);
+      border: 1.5px solid rgba(245, 179, 53, 0.35);
+      color: #faf0db;
+      font-family: var(--font-ui);
+      font-size: 0.95rem;
+      padding: 0.85rem 2.75rem 0.85rem 2.85rem;
+      border-radius: 12px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .search-input-field:focus {
+      border-color: var(--amber-gold);
+      box-shadow: 0 0 16px rgba(245, 179, 53, 0.25);
+    }
+    .search-input-field::placeholder {
+      color: rgba(230, 201, 168, 0.45);
+    }
+    .btn-clear-search {
+      position: absolute;
+      right: 0.85rem;
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      font-size: 1rem;
+      cursor: pointer;
+      padding: 0.25rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.2s;
+    }
+    .btn-clear-search:hover {
+      color: #faf0db;
+    }
+    .btn-search-submit {
+      background: linear-gradient(135deg, var(--amber-gold) 0%, #d88915 100%);
+      color: #1a0307;
+      border: none;
+      border-radius: 12px;
+      padding: 0.85rem 1.6rem;
+      font-family: var(--font-ui);
+      font-weight: 800;
+      font-size: 0.875rem;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      white-space: nowrap;
+      transition: all 0.2s var(--ease-smooth);
+      box-shadow: 0 4px 16px rgba(245, 179, 53, 0.3);
+    }
+    .btn-search-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 22px rgba(245, 179, 53, 0.45);
+      background: linear-gradient(135deg, #ffca65 0%, var(--amber-gold) 100%);
+    }
+    .search-chips-container {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      flex-wrap: wrap;
+      margin-top: 0.4rem;
+    }
+    .chips-label {
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: var(--amber-glow);
+    }
+    .chips-scroll {
+      display: flex;
+      gap: 0.45rem;
+      flex-wrap: wrap;
+    }
+    .search-chip {
+      background: rgba(36, 6, 11, 0.9);
+      border: 1px solid rgba(245, 179, 53, 0.25);
+      color: var(--text-muted);
+      font-family: var(--font-ui);
+      font-size: 0.78rem;
+      padding: 0.3rem 0.75rem;
+      border-radius: 9999px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+    .search-chip:hover {
+      border-color: var(--amber-gold);
+      color: #faf0db;
+      background: rgba(245, 179, 53, 0.15);
+      transform: translateY(-1px);
+    }
+    .search-status-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 1rem 1.25rem;
+      background: rgba(14, 1, 3, 0.75);
+      border: 1px dashed rgba(245, 179, 53, 0.35);
+      border-radius: 10px;
+      margin-top: 1.25rem;
+      color: var(--amber-gold);
+      font-size: 0.88rem;
+      font-family: var(--font-mono);
+    }
+    .search-status-spools {
+      display: flex;
+      gap: 0.35rem;
+    }
+    .mini-tape-spool {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: 2px dashed var(--amber-gold);
+      display: inline-block;
+    }
+    .mini-tape-spool.spinning {
+      animation: spinSpool 1s linear infinite;
+    }
+    .search-results-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+      gap: 1.15rem;
+      margin-top: 1.5rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid rgba(245, 179, 53, 0.15);
+    }
+    .search-song-card {
+      background: #1e0307;
+      border: 1px solid rgba(245, 179, 53, 0.25);
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+      transition: transform 0.25s ease, border-color 0.25s ease;
+    }
+    .search-song-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--amber-gold);
+      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.8), 0 0 16px rgba(245, 179, 53, 0.2);
+    }
+    .search-card-art-col {
+      position: relative;
+      aspect-ratio: 16 / 9;
+      background: #0f0103;
+      overflow: hidden;
+    }
+    .search-card-thumb {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.3s ease;
+    }
+    .search-song-card:hover .search-card-thumb {
+      transform: scale(1.04);
+    }
+    .search-card-plastic-glare {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, transparent 50%, rgba(0, 0, 0, 0.4) 100%);
+      pointer-events: none;
+    }
+    .search-card-vibe-tag {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      background: rgba(14, 2, 4, 0.9);
+      border: 1px solid rgba(245, 179, 53, 0.4);
+      color: var(--amber-gold);
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 0.2rem 0.55rem;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .search-card-details {
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      gap: 0.45rem;
+    }
+    .search-card-header {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+    .search-song-name {
+      font-family: var(--font-headline);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #faf0db;
+      margin: 0;
+      line-height: 1.25;
+    }
+    .search-film-pill {
+      font-size: 0.78rem;
+      color: var(--amber-glow);
+      font-weight: 600;
+    }
+    .search-singers-line {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      line-height: 1.35;
+    }
+    .search-lyric-quote {
+      font-family: var(--font-hand);
+      font-size: 1.05rem;
+      color: #ffdda1;
+      line-height: 1.3;
+      padding: 0.45rem 0.65rem;
+      background: rgba(0, 0, 0, 0.35);
+      border-left: 2px solid var(--amber-gold);
+      border-radius: 0 6px 6px 0;
+      margin-top: auto;
+    }
+    .search-card-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-top: 0.5rem;
+      padding-top: 0.6rem;
+      border-top: 1px solid rgba(245, 179, 53, 0.12);
+    }
+    .btn-play-searched-song {
+      flex: 1;
+      background: linear-gradient(135deg, var(--amber-gold) 0%, #c4760a 100%);
+      color: #180205;
+      border: none;
+      padding: 0.55rem 0.85rem;
+      border-radius: 8px;
+      font-family: var(--font-ui);
+      font-weight: 800;
+      font-size: 0.78rem;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      transition: all 0.2s ease;
+    }
+    .btn-play-searched-song:hover {
+      background: linear-gradient(135deg, #ffca65 0%, var(--amber-gold) 100%);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(245, 179, 53, 0.35);
+    }
+    .btn-searched-yt {
+      background: rgba(245, 179, 53, 0.1);
+      border: 1px solid rgba(245, 179, 53, 0.3);
+      color: var(--amber-gold);
+      padding: 0.55rem 0.75rem;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: background 0.2s;
+    }
+    .btn-searched-yt:hover {
+      background: rgba(245, 179, 53, 0.2);
+    }
+    @media (max-width: 640px) {
+      .search-form-bar {
+        flex-direction: column;
+      }
+      .btn-search-submit {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
     .mixtapes-intro-text {
       color: var(--text-muted);
       font-size: 0.95rem;
@@ -1460,6 +1832,7 @@
     <!-- Center: Navigation -->
     <nav class="nav-center" aria-label="Main Navigation">
       <a href="#home" class="nav-item active" id="navHome">Home</a>
+      <a href="#khojo" class="nav-item" id="navKhojo">Khojo 🔍</a>
       <a href="#mixtapes" class="nav-item" id="navMixtapes">Mixtapes</a>
       <a href="#yaadein" class="nav-item" id="navYaadein">Yaadein</a>
       <a href="#radio" class="nav-item" id="navRadio">Radio</a>
@@ -1547,6 +1920,84 @@
               <span style="color: var(--amber-gold);">♡</span>
             </div>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         GAANA KHOJO / CASSETTE FINDER (POWERED BY GEMINI AI)
+         ======================================================================== -->
+    <section class="song-search-section" id="khojo" aria-labelledby="khojo-heading">
+      <div class="search-cassette-box">
+        <div class="search-cassette-header">
+          <div class="search-title-row">
+            <svg class="search-cassette-icon" viewBox="0 0 24 16" aria-hidden="true">
+              <rect x="1" y="1" width="22" height="14" rx="2.5" />
+              <circle cx="7" cy="8" r="2.2" />
+              <circle cx="17" cy="8" r="2.2" />
+              <line x1="9.5" y1="8" x2="14.5" y2="8" />
+            </svg>
+            <h2 id="khojo-heading" class="search-heading">KHOJO PURANE GAANE ♡</h2>
+            <span class="ai-gemini-pill">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z"/></svg>
+              Gemini AI Search
+            </span>
+          </div>
+          <p class="search-subtitle">
+            Dhoondo koi bhi gaana, film, gayak (Kumar Sanu, Kishore Da, SPB, Arijit), ya purani shaam ki yaadein. Gemini AI magnetic tape archives se dhoond kar cassette player par bajayega:
+          </p>
+        </div>
+
+        <!-- Search Input Bar -->
+        <form class="search-form-bar" id="songSearchForm" onsubmit="return false;">
+          <div class="search-input-wrapper">
+            <svg class="search-lens-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+            </svg>
+            <input 
+              type="text" 
+              class="search-input-field" 
+              id="songSearchInput" 
+              placeholder="e.g. 'Pehla Nasha', 'Kumar Sanu sad songs', 'Salman Khan 90s Prem', 'Tujhe dekha toh'..." 
+              autocomplete="off"
+            />
+            <button type="button" class="btn-clear-search" id="btnClearSearch" aria-label="Clear search" style="display:none;">✕</button>
+          </div>
+          <button type="submit" class="btn-search-submit" id="btnSearchSubmit">
+            <span class="search-btn-text">KHOJO (SEARCH)</span>
+            <span class="search-btn-spinner" id="searchBtnSpinner" style="display:none;">
+              <span class="mini-tape-spool spinning"></span>
+            </span>
+            <span class="search-btn-arrow">→</span>
+          </button>
+        </form>
+
+        <!-- Nostalgic Preset Mood Chips -->
+        <div class="search-chips-container">
+          <span class="chips-label">NOSTALGIC TAPES:</span>
+          <div class="chips-scroll">
+            <button type="button" class="search-chip" data-query="Pehla Nasha 90s romance">🌧️ Pehla Nasha</button>
+            <button type="button" class="search-chip" data-query="Salman Khan Maine Pyar Kiya SPB romantic songs">🌹 Salman 90s Prem</button>
+            <button type="button" class="search-chip" data-query="Kumar Sanu 90s superhit romantic songs">🎶 Kumar Sanu Classics</button>
+            <button type="button" class="search-chip" data-query="Kishore Kumar evergreen late night radio hits">📻 Kishore Da Radio</button>
+            <button type="button" class="search-chip" data-query="Aashiqui 2 Adhoori Mohabbat heartbreak songs">💔 Adhoori Mohabbat</button>
+            <button type="button" class="search-chip" data-query="90s Bollywood college love letter songs">💌 College Love Letters</button>
+            <button type="button" class="search-chip" data-query="Udit Narayan Alka Yagnik 90s love duets">✨ 90s Duets</button>
+          </div>
+        </div>
+
+        <!-- Search Status / Tape Reel Indicator -->
+        <div class="search-status-bar" id="searchStatusBar" style="display:none;">
+          <div class="search-status-spools">
+            <div class="mini-tape-spool spinning"></div>
+            <div class="mini-tape-spool spinning"></div>
+          </div>
+          <span id="searchStatusText">Gemini AI magnetic tapes mein gaana dhoondh raha hai...</span>
+        </div>
+
+        <!-- Search Results Grid -->
+        <div class="search-results-grid" id="searchResultsGrid" style="display:none;">
+          <!-- Dynamically populated -->
         </div>
       </div>
     </section>
@@ -2581,7 +3032,237 @@
         }
       });
 
-      /* --- 5. SMOOTH NAVIGATION HIGHLIGHTING --- */
+      /* --- 5. GEMINI AI CASSETTE SONG SEARCH ENGINE --- */
+      const songSearchForm = document.getElementById('songSearchForm');
+      const songSearchInput = document.getElementById('songSearchInput');
+      const btnClearSearch = document.getElementById('btnClearSearch');
+      const btnSearchSubmit = document.getElementById('btnSearchSubmit');
+      const searchBtnSpinner = document.getElementById('searchBtnSpinner');
+      const searchStatusBar = document.getElementById('searchStatusBar');
+      const searchStatusText = document.getElementById('searchStatusText');
+      const searchResultsGrid = document.getElementById('searchResultsGrid');
+      const searchChips = document.querySelectorAll('.search-chip');
+
+      let searchedSongsCache = [];
+
+      function showSearchStatus(text, isError) {
+        if (!searchStatusBar) return;
+        searchStatusBar.style.display = 'flex';
+        if (searchStatusText) searchStatusText.textContent = text;
+        searchStatusBar.style.borderColor = isError ? 'rgba(230, 80, 80, 0.6)' : 'rgba(245, 179, 53, 0.4)';
+        searchStatusBar.style.color = isError ? '#ff8585' : 'var(--amber-gold)';
+      }
+
+      function hideSearchStatus() {
+        if (searchStatusBar) searchStatusBar.style.display = 'none';
+      }
+
+      async function executeSongSearch(query) {
+        const cleanQuery = (query || '').trim();
+        if (!cleanQuery) {
+          if (songSearchInput) songSearchInput.focus();
+          return;
+        }
+
+        if (songSearchInput) songSearchInput.value = cleanQuery;
+        if (btnClearSearch) btnClearSearch.style.display = 'block';
+
+        // UI Loading State
+        if (btnSearchSubmit) btnSearchSubmit.disabled = true;
+        if (searchBtnSpinner) searchBtnSpinner.style.display = 'inline-block';
+        showSearchStatus(`Gemini AI "${cleanQuery}" ke gaane magnetic tapes se dhoondh raha hai...`, false);
+        if (searchResultsGrid) {
+          searchResultsGrid.style.display = 'none';
+          searchResultsGrid.innerHTML = '';
+        }
+
+        try {
+          const res = await fetch('/api/search-songs', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ query: cleanQuery })
+          });
+
+          if (!res.ok) {
+            throw new Error(`Server returned status ${res.status}`);
+          }
+
+          const data = await res.json();
+          searchedSongsCache = data.results || [];
+
+          if (searchedSongsCache.length === 0) {
+            showSearchStatus(`Koi gaana nahi mila "${cleanQuery}" ke liye. Kuch aur dhoond kar dekhein jaise "Pehla Nasha" ya "Kumar Sanu".`, true);
+          } else {
+            hideSearchStatus();
+            renderSearchResults(searchedSongsCache, cleanQuery, data.source);
+          }
+        } catch (err) {
+          console.error('[Gemini Search Error]', err);
+          showSearchStatus('Network issue ya server busy. Purane gaano ka fallback tape chalaya ja raha hai...', true);
+        } finally {
+          if (btnSearchSubmit) btnSearchSubmit.disabled = false;
+          if (searchBtnSpinner) searchBtnSpinner.style.display = 'none';
+        }
+      }
+
+      function renderSearchResults(songs, query, source) {
+        if (!searchResultsGrid) return;
+        searchResultsGrid.innerHTML = '';
+
+        songs.forEach((song, idx) => {
+          const card = document.createElement('div');
+          card.className = 'search-song-card';
+          card.setAttribute('role', 'article');
+
+          const safeTitle = song.title || 'Unknown Title';
+          const safeFilm = song.film || 'Classic Bollywood';
+          const safeSingers = song.singers || 'Retro Legends';
+          const safeMusic = song.musicDirector ? `🎼 ${song.musicDirector}` : '';
+          const safeVibe = song.vibe || 'Vintage Romance';
+          const safeLyric = song.famousLyric || 'Purane gaane, feelings naye ♡';
+          const thumbSrc = song.thumbnail || '/src/assets/images/vintage_cassette_cover_1791736127552.jpg';
+          const ytUrl = song.url || `https://www.youtube.com/results?search_query=${encodeURIComponent(song.youtubeSearchQuery || `${safeTitle} ${safeFilm}`)}`;
+
+          card.innerHTML = `
+            <div class="search-card-art-col">
+              <img 
+                src="${thumbSrc}" 
+                alt="${safeTitle} - ${safeFilm}" 
+                class="search-card-thumb"
+                onerror="this.onerror=null; this.src='/src/assets/images/vintage_cassette_cover_1791736127552.jpg';"
+              />
+              <div class="search-card-plastic-glare"></div>
+              <span class="search-card-vibe-tag">${safeVibe}</span>
+            </div>
+            <div class="search-card-details">
+              <div class="search-card-header">
+                <h3 class="search-song-name">${safeTitle}</h3>
+                <span class="search-film-pill">${safeFilm}</span>
+              </div>
+              <div class="search-singers-line">🎤 ${safeSingers} ${safeMusic ? '· ' + safeMusic : ''}</div>
+              <div class="search-lyric-quote">“${safeLyric}”</div>
+              <div class="search-card-actions">
+                <button type="button" class="btn-play-searched-song" data-song-idx="${idx}">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                  <span>BAJAO (PLAY TAPE)</span>
+                </button>
+                <a href="${ytUrl}" target="_blank" rel="noopener noreferrer" class="btn-searched-yt" title="Open on YouTube ↗">
+                  YouTube ↗
+                </a>
+              </div>
+            </div>
+          `;
+
+          const playBtn = card.querySelector('.btn-play-searched-song');
+          if (playBtn) {
+            playBtn.addEventListener('click', () => {
+              playSearchedSong(song);
+            });
+          }
+
+          searchResultsGrid.appendChild(card);
+        });
+
+        searchResultsGrid.style.display = 'grid';
+        searchResultsGrid.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+
+      function playSearchedSong(song) {
+        const tapeKey = `search_${Date.now()}`;
+        const safeTitle = song.title || 'Searched Song';
+        const safeFilm = song.film ? ` (${song.film})` : '';
+        const safeSingers = song.singers || 'Retro Bollywood';
+        const videoId = song.youtubeVideoId && song.youtubeVideoId.length === 11 ? song.youtubeVideoId : (song.videoId || 'iEkd7bGXP4E');
+        const thumb = song.thumbnail || (videoId ? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg` : '/src/assets/images/vintage_cassette_cover_1791736127552.jpg');
+        const url = song.url || `https://www.youtube.com/watch?v=${videoId}`;
+
+        // Register in MIXTAPES catalog
+        MIXTAPES[tapeKey] = {
+          id: tapeKey,
+          title: `${safeTitle}${safeFilm}`,
+          singer: `${safeSingers}${song.musicDirector ? ' · ' + song.musicDirector : ''}`,
+          label: safeTitle.length > 18 ? safeTitle.substring(0, 16) + '...' : safeTitle,
+          thumb: thumb,
+          videoId: videoId,
+          url: url
+        };
+
+        // Add to Playlist Popover Menu dynamically
+        if (playlistPopoverMenu) {
+          const itemBtn = document.createElement('button');
+          itemBtn.type = 'button';
+          itemBtn.className = 'playlist-item-btn';
+          itemBtn.dataset.tapeKey = tapeKey;
+          itemBtn.setAttribute('role', 'menuitem');
+          itemBtn.innerHTML = `
+            <img src="${thumb}" alt="" onerror="this.onerror=null; this.src='/src/assets/images/vintage_cassette_cover_1791736127552.jpg';">
+            <div>
+              <strong>${safeTitle} ♡</strong><br>
+              <small style="color:var(--amber-gold);">${safeSingers.substring(0, 24)}</small>
+            </div>
+          `;
+          itemBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            switchMixtape(tapeKey);
+          });
+          playlistPopoverMenu.insertBefore(itemBtn, playlistPopoverMenu.firstChild.nextSibling);
+        }
+
+        // Switch to newly created cassette tape
+        switchMixtape(tapeKey);
+
+        // Tactile audio cue + reel spin
+        playSynthesizedRewindSound();
+
+        // Highlight player
+        const playerDockBar = document.querySelector('.player-dock-bar');
+        if (playerDockBar) {
+          playerDockBar.style.transform = 'scale(1.02)';
+          setTimeout(() => {
+            playerDockBar.style.transform = '';
+          }, 350);
+        }
+      }
+
+      // Input & Form Listeners
+      if (songSearchForm) {
+        songSearchForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          if (songSearchInput) executeSongSearch(songSearchInput.value);
+        });
+      }
+
+      if (songSearchInput) {
+        songSearchInput.addEventListener('input', () => {
+          if (btnClearSearch) {
+            btnClearSearch.style.display = songSearchInput.value ? 'block' : 'none';
+          }
+        });
+        songSearchInput.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            executeSongSearch(songSearchInput.value);
+          }
+        });
+      }
+
+      if (btnClearSearch && songSearchInput) {
+        btnClearSearch.addEventListener('click', () => {
+          songSearchInput.value = '';
+          btnClearSearch.style.display = 'none';
+          songSearchInput.focus();
+        });
+      }
+
+      // Suggestion Chip Buttons
+      searchChips.forEach((chip) => {
+        chip.addEventListener('click', () => {
+          const q = chip.dataset.query;
+          if (q) executeSongSearch(q);
+        });
+      });
+
+      /* --- 6. SMOOTH NAVIGATION HIGHLIGHTING --- */
       const navLinks = document.querySelectorAll('.nav-item');
       navLinks.forEach((link) => {
         link.addEventListener('click', () => {
