@@ -125,6 +125,16 @@ const FALLBACK_SONGS = [
     famousLyric: 'Bahon ke darmiyan do pyar mil rahe hain...',
     youtubeSearchQuery: 'Bahon Ke Darmiyan Khamoshi video song',
     youtubeVideoId: 'f56-xZ0h190'
+  },
+  {
+    title: 'Dil Ka Telephone',
+    film: 'Dream Girl (2019)',
+    singers: 'Jonita Gandhi, Nakash Aziz',
+    musicDirector: 'Meet Bros',
+    vibe: 'Ring-Ring Romance · Peppy Party Radio Mix ☎️',
+    famousLyric: 'Tere sarr pe hai ilzaam mere dil ka telephone ring-ring-ra-ra-ring...',
+    youtubeSearchQuery: 'Dil Ka Telephone Dream Girl Jonita Gandhi Nakash Aziz video song',
+    youtubeVideoId: 'a3B2glol4IU'
   }
 ];
 
@@ -181,14 +191,18 @@ For EACH song, return:
 
 Respond strictly with a JSON array conforming to the schema.`;
 
-    // Try gemini-2.5-flash first for speed and reliable response, fallback to gemini-3.8-flash
+    // Try gemini-2.5-flash first with quick timeout, falling back gracefully
     let rawText = '';
-    const modelsToTry = ['gemini-2.5-flash', 'gemini-3.8-flash'];
+    const modelsToTry = ['gemini-2.5-flash', 'gemini-2.0-flash'];
     let lastError: any = null;
 
     for (const model of modelsToTry) {
       try {
-        const response = await ai.models.generateContent({
+        const timeoutPromise = new Promise<never>((_, reject) =>
+          setTimeout(() => reject(new Error(`Timeout calling model ${model}`)), 4500)
+        );
+
+        const callPromise = ai.models.generateContent({
           model,
           contents: prompt,
           config: {
@@ -213,7 +227,9 @@ Respond strictly with a JSON array conforming to the schema.`;
           }
         });
 
-        if (response.text) {
+        const response: any = await Promise.race([callPromise, timeoutPromise]);
+
+        if (response && response.text) {
           rawText = response.text.trim();
           break;
         }
