@@ -720,17 +720,36 @@
     .search-card-art-col {
       position: relative;
       aspect-ratio: 16 / 9;
-      background: #0f0103;
+      background: #120204;
       overflow: hidden;
+      border-radius: 11px 11px 0 0;
+    }
+    .search-card-art-skeleton {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, #180306 0%, #2f080f 50%, #180306 100%);
+      background-size: 200% 100%;
+      animation: cassetteShimmer 1.8s infinite ease-in-out;
+      z-index: 1;
+    }
+    @keyframes cassetteShimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
     }
     .search-card-thumb {
       width: 100%;
       height: 100%;
       object-fit: cover;
       display: block;
-      transition: transform 0.3s ease;
+      transition: transform 0.35s ease, opacity 0.35s ease;
+      opacity: 0;
+      position: relative;
+      z-index: 2;
     }
-    .search-song-card:hover .search-card-thumb {
+    .search-card-thumb.loaded {
+      opacity: 1;
+    }
+    .search-song-card:hover .search-card-thumb.loaded {
       transform: scale(1.04);
     }
     .search-card-plastic-glare {
@@ -738,6 +757,7 @@
       inset: 0;
       background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, transparent 50%, rgba(0, 0, 0, 0.4) 100%);
       pointer-events: none;
+      z-index: 3;
     }
     .search-card-vibe-tag {
       position: absolute;
@@ -1284,28 +1304,50 @@
       transform: scale(1.05);
     }
 
-    .player-cassette-indicator {
+    /* ==========================================================================
+       DYNAMIC MULTI-BAND EQUALIZER & HI-FI SPECTRUM VISUALIZER
+       ========================================================================== */
+    .player-eq-trigger-btn {
       display: flex;
       align-items: center;
-      gap: 0.65rem;
+      gap: 0.55rem;
       margin-left: 0.35rem;
       flex-shrink: 0;
+      background: rgba(18, 2, 4, 0.75);
+      border: 1px solid rgba(245, 179, 53, 0.35);
+      border-radius: 9999px;
+      padding: 3px 8px 3px 4px;
+      cursor: pointer;
+      color: inherit;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+    .player-eq-trigger-btn:hover, .player-eq-trigger-btn:focus-visible {
+      border-color: var(--amber-gold);
+      background: rgba(30, 4, 8, 0.95);
+      box-shadow: 0 0 14px rgba(245, 179, 53, 0.35);
+      outline: none;
+    }
+    .player-eq-trigger-btn.active {
+      border-color: var(--amber-gold);
+      box-shadow: 0 0 16px rgba(245, 179, 53, 0.5);
+      background: rgba(45, 6, 12, 0.95);
     }
     .mini-deck-spools {
-      width: 50px;
-      height: 24px;
+      width: 44px;
+      height: 22px;
       background: #120204;
       border: 1.5px solid rgba(245, 179, 53, 0.35);
       border-radius: 9999px;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-      padding: 0 4px;
+      gap: 7px;
+      padding: 0 3px;
     }
     .mini-deck-reel {
-      width: 11px;
-      height: 11px;
+      width: 10px;
+      height: 10px;
       border: 1.5px dashed var(--amber-gold);
       border-radius: 50%;
     }
@@ -1313,28 +1355,306 @@
       animation: spinReel 1.8s linear infinite;
     }
 
-    .retro-eq-bars {
+    .multiband-eq-display {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+    .dock-eq-canvas {
+      width: 84px;
+      height: 22px;
+      display: block;
+      border-radius: 3px;
+      background: #090102;
+    }
+    .eq-band-labels {
+      display: flex;
+      justify-content: space-between;
+      width: 84px;
+      font-family: var(--font-mono);
+      font-size: 0.5rem;
+      color: rgba(245, 179, 53, 0.65);
+      line-height: 1;
+      padding: 0 1px;
+      pointer-events: none;
+      letter-spacing: -0.02em;
+    }
+    .eq-badge-text {
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      font-weight: 800;
+      color: var(--amber-gold);
+      letter-spacing: 0.04em;
+      padding: 2px 4px;
+      border-radius: 3px;
+      background: rgba(245, 179, 53, 0.15);
+      border: 1px solid rgba(245, 179, 53, 0.3);
+    }
+
+    /* EXPANDED HI-FI GRAPHIC EQUALIZER DRAWER PANEL */
+    .player-eq-drawer {
+      position: absolute;
+      bottom: calc(100% + 14px);
+      left: 12px;
+      background: #140204;
+      border: 1.5px solid rgba(245, 179, 53, 0.45);
+      border-radius: 16px;
+      padding: 1.1rem 1.25rem;
+      width: min(94vw, 500px);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.95), 0 0 30px rgba(245, 179, 53, 0.25);
+      display: none;
+      flex-direction: column;
+      gap: 0.8rem;
+      z-index: 9999;
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      color: var(--text-cream);
+    }
+    .player-eq-drawer.open {
+      display: flex;
+      animation: eqDrawerFadeIn 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes eqDrawerFadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .eq-drawer-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(245, 179, 53, 0.2);
+      padding-bottom: 0.6rem;
+    }
+    .eq-drawer-title-group {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+    }
+    .eq-drawer-title {
+      font-family: var(--font-headline);
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--amber-gold);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin: 0;
+    }
+    .eq-live-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      font-weight: 700;
+      color: #34d399;
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(52, 211, 153, 0.3);
+      padding: 0.15rem 0.45rem;
+      border-radius: 9999px;
+      text-transform: uppercase;
+    }
+    .eq-live-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #34d399;
+      animation: pulseLiveDot 1.4s infinite ease-in-out;
+    }
+    @keyframes pulseLiveDot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.8); }
+    }
+    .btn-eq-close {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 0.2rem 0.45rem;
+      font-size: 1.1rem;
+      line-height: 1;
+      border-radius: 4px;
+      transition: color 0.15s;
+    }
+    .btn-eq-close:hover {
+      color: var(--amber-gold);
+    }
+
+    /* Dual Stereo VU Meter Section */
+    .eq-vu-meter-row {
+      display: flex;
+      gap: 0.85rem;
+      background: #0d0103;
+      border: 1px solid rgba(245, 179, 53, 0.2);
+      border-radius: 8px;
+      padding: 0.55rem 0.8rem;
+    }
+    .vu-meter-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+    .vu-label-bar {
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      color: var(--amber-gold);
+      font-weight: 700;
+    }
+    .vu-scale-ticks {
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--font-mono);
+      font-size: 0.52rem;
+      color: var(--text-dim);
+    }
+    .vu-meter-track {
+      height: 7px;
+      background: #1e0307;
+      border-radius: 4px;
+      overflow: hidden;
+      border: 1px solid rgba(245, 179, 53, 0.2);
+      position: relative;
+    }
+    .vu-meter-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #10b981 0%, #f5b335 70%, #ef4444 95%);
+      transition: width 0.05s linear;
+      border-radius: 3px;
+    }
+
+    /* Expanded Spectrum Display Canvas */
+    .drawer-eq-canvas-wrapper {
+      position: relative;
+      background: #090102;
+      border: 1px solid rgba(245, 179, 53, 0.3);
+      border-radius: 10px;
+      padding: 0.5rem;
+      overflow: hidden;
+    }
+    .drawer-eq-canvas {
+      width: 100%;
+      height: 95px;
+      display: block;
+      border-radius: 6px;
+    }
+    .drawer-eq-glass-glare {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.07) 0%, transparent 45%, rgba(0, 0, 0, 0.35) 100%);
+      pointer-events: none;
+    }
+
+    /* Tape Bias Presets */
+    .eq-presets-row {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+    .eq-presets-label {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--amber-gold);
+    }
+    .eq-presets-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+    }
+    .btn-eq-preset {
+      background: rgba(245, 179, 53, 0.08);
+      border: 1px solid rgba(245, 179, 53, 0.25);
+      color: var(--text-cream);
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      padding: 0.22rem 0.52rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .btn-eq-preset:hover {
+      background: rgba(245, 179, 53, 0.18);
+      border-color: var(--amber-gold);
+      color: var(--amber-gold);
+    }
+    .btn-eq-preset.active {
+      background: var(--amber-gold);
+      border-color: var(--amber-gold);
+      color: #1a0306;
+      font-weight: 700;
+      box-shadow: 0 0 10px rgba(245, 179, 53, 0.4);
+    }
+
+    /* 10-Band Slider Controls */
+    .eq-sliders-container {
       display: flex;
       align-items: flex-end;
-      gap: 2px;
-      height: 16px;
-      width: 20px;
+      justify-content: space-between;
+      gap: 0.25rem;
+      background: #0b0102;
+      border: 1px solid rgba(245, 179, 53, 0.18);
+      border-radius: 8px;
+      padding: 0.6rem 0.4rem 0.45rem;
     }
-    .eq-bar-stick {
-      width: 2.5px;
-      height: 3px;
-      background: var(--amber-gold);
-      border-radius: 1px;
-      transition: height 0.15s ease;
+    .eq-slider-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.3rem;
+      flex: 1;
     }
-    .playing .eq-bar-stick:nth-child(1) { animation: eqAnim 0.75s infinite ease-in-out alternate; }
-    .playing .eq-bar-stick:nth-child(2) { animation: eqAnim 0.5s 0.15s infinite ease-in-out alternate; }
-    .playing .eq-bar-stick:nth-child(3) { animation: eqAnim 0.9s 0.05s infinite ease-in-out alternate; }
-    .playing .eq-bar-stick:nth-child(4) { animation: eqAnim 0.6s 0.25s infinite ease-in-out alternate; }
-    .playing .eq-bar-stick:nth-child(5) { animation: eqAnim 0.8s 0.1s infinite ease-in-out alternate; }
-    @keyframes eqAnim {
-      0% { height: 3px; }
-      100% { height: 16px; }
+    .eq-slider-val {
+      font-family: var(--font-mono);
+      font-size: 0.55rem;
+      color: var(--text-dim);
+    }
+    .eq-slider-input {
+      writing-mode: vertical-lr;
+      direction: rtl;
+      width: 14px;
+      height: 52px;
+      -webkit-appearance: slider-vertical;
+      appearance: slider-vertical;
+      accent-color: var(--amber-gold);
+      cursor: pointer;
+    }
+    .eq-slider-label {
+      font-family: var(--font-mono);
+      font-size: 0.56rem;
+      color: var(--amber-gold);
+      font-weight: 700;
+    }
+    .eq-footer-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 0.25rem;
+      border-top: 1px solid rgba(245, 179, 53, 0.15);
+    }
+    .btn-eq-reset {
+      background: none;
+      border: 1px solid rgba(245, 179, 53, 0.3);
+      color: var(--amber-gold);
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      padding: 0.2rem 0.55rem;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .btn-eq-reset:hover {
+      background: rgba(245, 179, 53, 0.15);
+    }
+    .eq-footer-note {
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      color: var(--text-dim);
     }
 
     /* CENTER SECTION: Scrubber + Volume slider + Playlist selector */
@@ -1592,8 +1912,11 @@
         grid-template-columns: 1fr;
         gap: 2.25rem;
       }
-      .player-cassette-indicator {
+      .player-eq-trigger-btn {
         display: none;
+      }
+      .btn-mobile-eq {
+        display: inline-flex !important;
       }
       .player-center-track-section {
         max-width: 380px;
@@ -1682,10 +2005,44 @@
       .mobile-playlist-chip {
         display: inline-flex !important;
       }
+      .btn-mobile-eq {
+        display: inline-flex !important;
+      }
+      .player-eq-drawer {
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        width: 94vw !important;
+        max-width: 94vw !important;
+        bottom: calc(100% + 8px) !important;
+        padding: 0.85rem !important;
+      }
+      .drawer-eq-canvas {
+        height: 75px !important;
+      }
+      .eq-slider-input {
+        height: 44px !important;
+      }
     }
 
     .mobile-playlist-chip {
       display: none;
+    }
+    .btn-mobile-eq {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      font-weight: 800;
+      color: var(--amber-gold);
+      border: 1px solid rgba(245, 179, 53, 0.4);
+      background: rgba(245, 179, 53, 0.12);
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .btn-mobile-eq.active {
+      background: var(--amber-gold);
+      color: #1a0306;
     }
 
     /* Secret Rewind Modal */
@@ -1903,7 +2260,7 @@
               src="/src/assets/images/hero_cassette_scene_1791734858245.jpg" 
               alt="Vintage audio cassette titled 'Cassette Wala Pyaar' beside a red rose, cutting chai, and stacked retro tapes on maroon tablecloth" 
               class="hero-scene-img"
-              onerror="this.onerror=null; this.src='/src/assets/images/vintage_cassette_cover_1791736127552.jpg';"
+              onerror="this.onerror=null; this.src='/images/retro_cassette_fallback.jpg';"
             />
             <div class="hero-scene-overlay" aria-hidden="true"></div>
 
@@ -2030,7 +2387,7 @@
               src="https://i.ytimg.com/vi/iEkd7bGXP4E/hqdefault.jpg" 
               alt="Aashiqui 2 All Best Songs Romantic Love Songs" 
               class="mixtape-card-img"
-              onerror="this.onerror=null; this.src='/src/assets/images/vintage_cassette_cover_1791736127552.jpg';"
+              onerror="this.onerror=null; this.src='/images/retro_cassette_fallback.jpg';"
             />
             <div class="mixtape-card-plastic-overlay"></div>
             <div class="mixtape-era-tag">AASHIQUI 2 · ADHOORI MOHABBAT 💔</div>
@@ -2055,7 +2412,7 @@
               src="https://i.ytimg.com/vi/5FD6Psi7fyk/hqdefault.jpg" 
               alt="Salman Khan 90s Romantic Songs and S.P. Balasubrahmanyam Hits" 
               class="mixtape-card-img"
-              onerror="this.onerror=null; this.src='/src/assets/images/vintage_cassette_cover_1791736127552.jpg';"
+              onerror="this.onerror=null; this.src='/images/retro_cassette_fallback.jpg';"
             />
             <div class="mixtape-card-plastic-overlay"></div>
             <div class="mixtape-era-tag">SALMAN KHAN 90s · SPB</div>
@@ -2080,7 +2437,7 @@
               src="https://i.ytimg.com/vi/xp5j2IHyTgs/hqdefault.jpg" 
               alt="Kumar Sanu 90s Superhit Romantic Songs Jukebox" 
               class="mixtape-card-img"
-              onerror="this.onerror=null; this.src='/src/assets/images/vintage_cassette_cover_1791736127552.jpg';"
+              onerror="this.onerror=null; this.src='/images/retro_cassette_fallback.jpg';"
             />
             <div class="mixtape-card-plastic-overlay"></div>
             <div class="mixtape-era-tag">KUMAR SANU · 90s ROMANCE</div>
@@ -2105,7 +2462,7 @@
               src="https://i.ytimg.com/vi/ebw1zHtleFY/hqdefault.jpg" 
               alt="Kishore Kumar Hits Dekha Ek Khwab Mere Samnewali Khidki" 
               class="mixtape-card-img"
-              onerror="this.onerror=null; this.src='/src/assets/images/vintage_cassette_cover_1791736127552.jpg';"
+              onerror="this.onerror=null; this.src='/images/retro_cassette_fallback.jpg';"
             />
             <div class="mixtape-card-plastic-overlay"></div>
             <div class="mixtape-era-tag">KISHORE DA · EVERGREEN</div>
@@ -2130,7 +2487,7 @@
               src="https://i.ytimg.com/vi/9JJuXIi5YAU/hqdefault.jpg" 
               alt="90s Love Song Udit Narayan Alka Yagnik Kumar Sanu Jukebox" 
               class="mixtape-card-img"
-              onerror="this.onerror=null; this.src='/src/assets/images/vintage_cassette_cover_1791736127552.jpg';"
+              onerror="this.onerror=null; this.src='/images/retro_cassette_fallback.jpg';"
             />
             <div class="mixtape-card-plastic-overlay"></div>
             <div class="mixtape-era-tag">90s LOVE SONGS · DUETS</div>
@@ -2155,7 +2512,7 @@
               src="https://i.ytimg.com/vi/gFyZGsTR1FI/hqdefault.jpg" 
               alt="Best of Ankit Tiwari Top 10 Melodies" 
               class="mixtape-card-img"
-              onerror="this.onerror=null; this.src='/src/assets/images/vintage_cassette_cover_1791736127552.jpg';"
+              onerror="this.onerror=null; this.src='/images/retro_cassette_fallback.jpg';"
             />
             <div class="mixtape-card-plastic-overlay"></div>
             <div class="mixtape-era-tag">ANKIT TIWARI · SOULFUL</div>
@@ -2180,7 +2537,7 @@
               src="https://i.ytimg.com/vi/kXHiIxx2atA/hqdefault.jpg" 
               alt="Best of Arijit Singh Romantic Non-Stop Jukebox" 
               class="mixtape-card-img"
-              onerror="this.onerror=null; this.src='/src/assets/images/vintage_cassette_cover_1791736127552.jpg';"
+              onerror="this.onerror=null; this.src='/images/retro_cassette_fallback.jpg';"
             />
             <div class="mixtape-card-plastic-overlay"></div>
             <div class="mixtape-era-tag">ARIJIT SINGH · ROMANCE</div>
@@ -2205,7 +2562,7 @@
               src="https://i.ytimg.com/vi/a3B2glol4IU/hqdefault.jpg" 
               alt="Dil Ka Telephone Dream Girl YouTube Mix" 
               class="mixtape-card-img"
-              onerror="this.onerror=null; this.src='/src/assets/images/vintage_cassette_cover_1791736127552.jpg';"
+              onerror="this.onerror=null; this.src='/images/retro_cassette_fallback.jpg';"
             />
             <div class="mixtape-card-plastic-overlay"></div>
             <div class="mixtape-era-tag">BOLLYWOOD MIX · DIL KA TELEPHONE ☎️</div>
@@ -2401,20 +2758,25 @@
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
         </button>
 
-        <!-- Mini Deck Spools + Equalizer (Desktop) -->
-        <div class="player-cassette-indicator" aria-hidden="true">
-          <div class="mini-deck-spools">
+        <!-- Mini Deck Spools + Dynamic Multi-Band Graphic Equalizer -->
+        <button type="button" class="player-eq-trigger-btn" id="btnEqDrawer" aria-label="Open 10-Band Graphic Equalizer Spectrum" aria-haspopup="true" aria-expanded="false" title="Click for Hi-Fi Multi-Band Equalizer">
+          <div class="mini-deck-spools" aria-hidden="true">
             <div class="mini-deck-reel"></div>
             <div class="mini-deck-reel"></div>
           </div>
-          <div class="retro-eq-bars">
-            <div class="eq-bar-stick"></div>
-            <div class="eq-bar-stick"></div>
-            <div class="eq-bar-stick"></div>
-            <div class="eq-bar-stick"></div>
-            <div class="eq-bar-stick"></div>
+          <div class="multiband-eq-display" aria-hidden="true">
+            <canvas id="dockEqCanvas" width="84" height="22" class="dock-eq-canvas"></canvas>
+            <div class="eq-band-labels">
+              <span>32</span><span>64</span><span>125</span><span>250</span><span>500</span><span>1k</span><span>2k</span><span>4k</span><span>8k</span><span>16k</span>
+            </div>
           </div>
-        </div>
+          <span class="eq-badge-text">EQ</span>
+        </button>
+
+        <!-- Mobile EQ Trigger Button -->
+        <button type="button" class="btn-ctrl btn-mobile-eq" id="btnMobileEq" aria-label="Open Equalizer" title="10-Band Equalizer">
+          EQ
+        </button>
       </div>
 
       <!-- CENTER SECTION: Scrubber + Volume slider + Playlist selector -->
@@ -2444,56 +2806,56 @@
         <div class="playlist-popover-menu" id="playlistPopoverMenu" role="menu">
           <div class="playlist-popover-title">Choose Mixtape Playlist</div>
           <button type="button" class="playlist-item-btn active" data-tape-key="aashiqui-2" role="menuitem">
-            <img src="https://i.ytimg.com/vi/iEkd7bGXP4E/hqdefault.jpg" alt="" onerror="this.onerror=null; this.src='/src/assets/images/vintage_cassette_cover_1791736127552.jpg';">
+            <img src="https://i.ytimg.com/vi/iEkd7bGXP4E/hqdefault.jpg" alt="" onerror="this.onerror=null; this.src='/images/retro_cassette_fallback.jpg';">
             <div>
               <strong>Aashiqui 2 💔</strong><br>
               <small style="color:var(--text-dim);">Adhoori Mohabbat</small>
             </div>
           </button>
           <button type="button" class="playlist-item-btn" data-tape-key="spb-salman" role="menuitem">
-            <img src="https://i.ytimg.com/vi/5FD6Psi7fyk/hqdefault.jpg" alt="" onerror="this.onerror=null; this.src='/src/assets/images/vintage_cassette_cover_1791736127552.jpg';">
+            <img src="https://i.ytimg.com/vi/5FD6Psi7fyk/hqdefault.jpg" alt="" onerror="this.onerror=null; this.src='/images/retro_cassette_fallback.jpg';">
             <div>
               <strong>90s Salman & SPB</strong><br>
               <small style="color:var(--text-dim);">Voice of Prem</small>
             </div>
           </button>
           <button type="button" class="playlist-item-btn" data-tape-key="kumar-sanu" role="menuitem">
-            <img src="https://i.ytimg.com/vi/xp5j2IHyTgs/hqdefault.jpg" alt="" onerror="this.onerror=null; this.src='/src/assets/images/vintage_cassette_cover_1791736127552.jpg';">
+            <img src="https://i.ytimg.com/vi/xp5j2IHyTgs/hqdefault.jpg" alt="" onerror="this.onerror=null; this.src='/images/retro_cassette_fallback.jpg';">
             <div>
               <strong>Kumar Sanu Hits</strong><br>
               <small style="color:var(--text-dim);">90s Romantic Jukebox</small>
             </div>
           </button>
           <button type="button" class="playlist-item-btn" data-tape-key="kishore-kumar" role="menuitem">
-            <img src="https://i.ytimg.com/vi/ebw1zHtleFY/hqdefault.jpg" alt="" onerror="this.onerror=null; this.src='/src/assets/images/vintage_cassette_cover_1791736127552.jpg';">
+            <img src="https://i.ytimg.com/vi/ebw1zHtleFY/hqdefault.jpg" alt="" onerror="this.onerror=null; this.src='/images/retro_cassette_fallback.jpg';">
             <div>
               <strong>Kishore Kumar Hits</strong><br>
               <small style="color:var(--text-dim);">Evergreen Radio Melodies</small>
             </div>
           </button>
           <button type="button" class="playlist-item-btn" data-tape-key="bollywood-90s-duets" role="menuitem">
-            <img src="https://i.ytimg.com/vi/9JJuXIi5YAU/hqdefault.jpg" alt="" onerror="this.onerror=null; this.src='/src/assets/images/vintage_cassette_cover_1791736127552.jpg';">
+            <img src="https://i.ytimg.com/vi/9JJuXIi5YAU/hqdefault.jpg" alt="" onerror="this.onerror=null; this.src='/images/retro_cassette_fallback.jpg';">
             <div>
               <strong>90s Love Duets</strong><br>
               <small style="color:var(--text-dim);">Udit, Alka, Sanu</small>
             </div>
           </button>
           <button type="button" class="playlist-item-btn" data-tape-key="ankit-tiwari" role="menuitem">
-            <img src="https://i.ytimg.com/vi/gFyZGsTR1FI/hqdefault.jpg" alt="" onerror="this.onerror=null; this.src='/src/assets/images/vintage_cassette_cover_1791736127552.jpg';">
+            <img src="https://i.ytimg.com/vi/gFyZGsTR1FI/hqdefault.jpg" alt="" onerror="this.onerror=null; this.src='/images/retro_cassette_fallback.jpg';">
             <div>
               <strong>Best of Ankit Tiwari</strong><br>
               <small style="color:var(--text-dim);">Sunn Raha Hai Na Tu</small>
             </div>
           </button>
           <button type="button" class="playlist-item-btn" data-tape-key="arijit-singh" role="menuitem">
-            <img src="https://i.ytimg.com/vi/kXHiIxx2atA/hqdefault.jpg" alt="" onerror="this.onerror=null; this.src='/src/assets/images/vintage_cassette_cover_1791736127552.jpg';">
+            <img src="https://i.ytimg.com/vi/kXHiIxx2atA/hqdefault.jpg" alt="" onerror="this.onerror=null; this.src='/images/retro_cassette_fallback.jpg';">
             <div>
               <strong>Best of Arijit Singh</strong><br>
               <small style="color:var(--text-dim);">Soulful Romantic Classics</small>
             </div>
           </button>
           <button type="button" class="playlist-item-btn" data-tape-key="dil-ka-telephone" role="menuitem">
-            <img src="https://i.ytimg.com/vi/a3B2glol4IU/hqdefault.jpg" alt="" onerror="this.onerror=null; this.src='/src/assets/images/vintage_cassette_cover_1791736127552.jpg';">
+            <img src="https://i.ytimg.com/vi/a3B2glol4IU/hqdefault.jpg" alt="" onerror="this.onerror=null; this.src='/images/retro_cassette_fallback.jpg';">
             <div>
               <strong>Dil Ka Telephone Mix ☎️</strong><br>
               <small style="color:var(--text-dim);">Dream Girl · YouTube Mix</small>
@@ -2517,13 +2879,82 @@
             id="playerThumbImg" 
             src="https://i.ytimg.com/vi/iEkd7bGXP4E/hqdefault.jpg" 
             alt="Currently playing song artwork"
-            onerror="this.onerror=null; this.src='/src/assets/images/vintage_cassette_cover_1791736127552.jpg';"
+            onerror="this.onerror=null; this.src='/images/retro_cassette_fallback.jpg';"
           />
         </div>
 
         <a href="https://youtu.be/iEkd7bGXP4E?si=zC3Iw3DdIp-j1d1v" target="_blank" rel="noopener noreferrer" class="btn-yt-direct" id="btnYtDirect" aria-label="Listen directly on YouTube" title="Listen on YouTube ↗">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19 19H5V5h7V3H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
         </a>
+      </div>
+    </div>
+
+    <!-- ========================================================================
+         EXPANDED 10-BAND GRAPHIC EQUALIZER DRAWER & VU METERS
+         ======================================================================== -->
+    <div class="player-eq-drawer" id="playerEqDrawer" role="dialog" aria-label="Graphic Equalizer and Spectrum Analyzer" aria-modal="false">
+      <div class="eq-drawer-header">
+        <div class="eq-drawer-title-group">
+          <h3 class="eq-drawer-title">10-Band Graphic Equalizer</h3>
+          <span class="eq-live-pill"><span class="eq-live-dot"></span> Real-Time Audio</span>
+        </div>
+        <button type="button" class="btn-eq-close" id="btnEqClose" aria-label="Close Equalizer Panel">✕</button>
+      </div>
+
+      <!-- Stereo Dual VU Meters (L & R Channels) -->
+      <div class="eq-vu-meter-row">
+        <div class="vu-meter-col">
+          <div class="vu-label-bar">
+            <span>L CH (STEREO)</span>
+            <span id="vuValL">-∞ dB</span>
+          </div>
+          <div class="vu-meter-track">
+            <div class="vu-meter-fill" id="vuFillL"></div>
+          </div>
+          <div class="vu-scale-ticks">
+            <span>-20</span><span>-10</span><span>-5</span><span>0</span><span>+3</span>
+          </div>
+        </div>
+        <div class="vu-meter-col">
+          <div class="vu-label-bar">
+            <span>R CH (STEREO)</span>
+            <span id="vuValR">-∞ dB</span>
+          </div>
+          <div class="vu-meter-track">
+            <div class="vu-meter-fill" id="vuFillR"></div>
+          </div>
+          <div class="vu-scale-ticks">
+            <span>-20</span><span>-10</span><span>-5</span><span>0</span><span>+3</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- High-Resolution Real-Time Spectrum Canvas -->
+      <div class="drawer-eq-canvas-wrapper">
+        <canvas id="drawerEqCanvas" width="460" height="95" class="drawer-eq-canvas"></canvas>
+        <div class="drawer-eq-glass-glare"></div>
+      </div>
+
+      <!-- Nostalgic Tape Bias & Acoustic Presets -->
+      <div class="eq-presets-row">
+        <span class="eq-presets-label">Tape Bias & EQ Presets</span>
+        <div class="eq-presets-chips">
+          <button type="button" class="btn-eq-preset active" data-preset="normal">Tape I Normal (Fe2O3)</button>
+          <button type="button" class="btn-eq-preset" data-preset="chrome">Tape II Chrome (CrO2)</button>
+          <button type="button" class="btn-eq-preset" data-preset="metal">Tape IV Metal Boost</button>
+          <button type="button" class="btn-eq-preset" data-preset="vocal">Mehfil Vocals</button>
+          <button type="button" class="btn-eq-preset" data-preset="bass">Monsoon Dholak</button>
+        </div>
+      </div>
+
+      <!-- 10-Band Sliders -->
+      <div class="eq-sliders-container" id="eqSlidersContainer">
+        <!-- Populated dynamically in JS for 32, 64, 125, 250, 500, 1k, 2k, 4k, 8k, 16k -->
+      </div>
+
+      <div class="eq-footer-actions">
+        <span class="eq-footer-note">Analog tape response simulation & Web Audio filtering</span>
+        <button type="button" class="btn-eq-reset" id="btnEqReset">Reset Flat (0dB)</button>
       </div>
     </div>
   </aside>
@@ -2771,7 +3202,7 @@
           playerThumbImg.alt = `${tape.title} - ${tape.singer}`;
           playerThumbImg.onerror = function () {
             this.onerror = null;
-            this.src = '/src/assets/images/vintage_cassette_cover_1791736127552.jpg';
+            this.src = '/images/retro_cassette_fallback.jpg';
           };
         }
         if (playerSongTitle) playerSongTitle.textContent = tape.title;
@@ -3238,16 +3669,22 @@
           const safeMusic = song.musicDirector ? `🎼 ${song.musicDirector}` : '';
           const safeVibe = song.vibe || 'Vintage Romance';
           const safeLyric = song.famousLyric || 'Purane gaane, feelings naye ♡';
-          const thumbSrc = song.thumbnail || '/src/assets/images/vintage_cassette_cover_1791736127552.jpg';
+          const primaryThumb = song.thumbnail || song.artworkFallback || '/images/retro_cassette_fallback.jpg';
+          const secondaryArt = song.artworkFallback || '/images/retro_cassette_fallback.jpg';
+          const localFallback = song.defaultFallback || '/images/retro_cassette_fallback.jpg';
           const ytUrl = song.url || `https://www.youtube.com/results?search_query=${encodeURIComponent(song.youtubeSearchQuery || `${safeTitle} ${safeFilm}`)}`;
 
           card.innerHTML = `
             <div class="search-card-art-col">
+              <div class="search-card-art-skeleton" aria-hidden="true"></div>
               <img 
-                src="${thumbSrc}" 
+                src="${primaryThumb}" 
                 alt="${safeTitle} - ${safeFilm}" 
-                class="search-card-thumb"
-                onerror="this.onerror=null; this.src='/src/assets/images/vintage_cassette_cover_1791736127552.jpg';"
+                class="search-card-thumb loading"
+                loading="lazy"
+                data-step="0"
+                data-secondary="${secondaryArt}"
+                data-fallback="${localFallback}"
               />
               <div class="search-card-plastic-glare"></div>
               <span class="search-card-vibe-tag">${safeVibe}</span>
@@ -3271,6 +3708,42 @@
             </div>
           `;
 
+          const img = card.querySelector('.search-card-thumb');
+          const skeleton = card.querySelector('.search-card-art-skeleton');
+
+          function triggerFallback() {
+            const step = parseInt(img.dataset.step || '0', 10);
+            if (step === 0 && img.dataset.secondary && img.dataset.secondary !== img.src) {
+              img.dataset.step = '1';
+              img.src = img.dataset.secondary;
+            } else if (step <= 1 && img.dataset.fallback && img.dataset.fallback !== img.src) {
+              img.dataset.step = '2';
+              img.src = img.dataset.fallback;
+            } else {
+              img.classList.remove('loading');
+              img.classList.add('loaded');
+              if (skeleton) skeleton.style.display = 'none';
+            }
+          }
+
+          function onImageLoad() {
+            // Guard against YouTube's 120x90 grey 3-dot "missing thumbnail" placeholder
+            if (img.naturalWidth <= 120 && img.naturalHeight <= 90 && img.naturalWidth > 0) {
+              triggerFallback();
+              return;
+            }
+            img.classList.remove('loading');
+            img.classList.add('loaded');
+            if (skeleton) skeleton.style.display = 'none';
+          }
+
+          img.addEventListener('load', onImageLoad);
+          img.addEventListener('error', triggerFallback);
+
+          if (img.complete) {
+            onImageLoad();
+          }
+
           const playBtn = card.querySelector('.btn-play-searched-song');
           if (playBtn) {
             playBtn.addEventListener('click', () => {
@@ -3290,8 +3763,8 @@
         const safeTitle = song.title || 'Searched Song';
         const safeFilm = song.film ? ` (${song.film})` : '';
         const safeSingers = song.singers || 'Retro Bollywood';
-        const videoId = song.youtubeVideoId && song.youtubeVideoId.length === 11 ? song.youtubeVideoId : (song.videoId || 'iEkd7bGXP4E');
-        const thumb = song.thumbnail || (videoId ? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg` : '/src/assets/images/vintage_cassette_cover_1791736127552.jpg');
+        const videoId = song.youtubeVideoId && song.youtubeVideoId.length === 11 ? song.youtubeVideoId : (song.videoId || 'a3B2glol4IU');
+        const thumb = song.thumbnail || song.artworkFallback || (videoId ? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg` : '/images/retro_cassette_fallback.jpg');
         const url = song.url || `https://www.youtube.com/watch?v=${videoId}`;
 
         // Register in MIXTAPES catalog
@@ -3313,7 +3786,7 @@
           itemBtn.dataset.tapeKey = tapeKey;
           itemBtn.setAttribute('role', 'menuitem');
           itemBtn.innerHTML = `
-            <img src="${thumb}" alt="" onerror="this.onerror=null; this.src='/src/assets/images/vintage_cassette_cover_1791736127552.jpg';">
+            <img src="${thumb}" alt="" onerror="this.onerror=null; this.src='/images/retro_cassette_fallback.jpg';">
             <div>
               <strong>${safeTitle} ♡</strong><br>
               <small style="color:var(--amber-gold);">${safeSingers.substring(0, 24)}</small>
@@ -3380,7 +3853,494 @@
         });
       });
 
-      /* --- 6. SMOOTH NAVIGATION HIGHLIGHTING --- */
+      /* --- 6. DYNAMIC MULTI-BAND GRAPHIC EQUALIZER & SPECTRUM ANALYZER --- */
+      (function initMultiBandEqualizer() {
+        const dockCanvas = document.getElementById('dockEqCanvas');
+        const drawerCanvas = document.getElementById('drawerEqCanvas');
+        const btnEqDrawer = document.getElementById('btnEqDrawer');
+        const btnMobileEq = document.getElementById('btnMobileEq');
+        const btnEqClose = document.getElementById('btnEqClose');
+        const playerEqDrawer = document.getElementById('playerEqDrawer');
+        const eqSlidersContainer = document.getElementById('eqSlidersContainer');
+        const btnEqReset = document.getElementById('btnEqReset');
+        const presetButtons = document.querySelectorAll('.btn-eq-preset');
+        const vuFillL = document.getElementById('vuFillL');
+        const vuFillR = document.getElementById('vuFillR');
+        const vuValL = document.getElementById('vuValL');
+        const vuValR = document.getElementById('vuValR');
+
+        // 10 Standard Hi-Fi Equalizer Frequency Bands
+        const BANDS = [
+          { key: '32', label: '32', full: '32Hz', centerHz: 32, factor: 1.15 },
+          { key: '64', label: '64', full: '64Hz', centerHz: 64, factor: 1.25 },
+          { key: '125', label: '125', full: '125Hz', centerHz: 125, factor: 1.2 },
+          { key: '250', label: '250', full: '250Hz', centerHz: 250, factor: 1.05 },
+          { key: '500', label: '500', full: '500Hz', centerHz: 500, factor: 1.0 },
+          { key: '1k', label: '1k', full: '1kHz', centerHz: 1000, factor: 1.08 },
+          { key: '2k', label: '2k', full: '2kHz', centerHz: 2000, factor: 1.12 },
+          { key: '4k', label: '4k', full: '4kHz', centerHz: 4000, factor: 1.05 },
+          { key: '8k', label: '8k', full: '8kHz', centerHz: 8000, factor: 1.18 },
+          { key: '16k', label: '16k', full: '16kHz', centerHz: 16000, factor: 1.22 }
+        ];
+
+        // Tape Bias & Acoustic Tone Presets (Gains in dB for each of the 10 bands)
+        const PRESETS = {
+          normal: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          chrome: [2, 1, 0, 0, 0, 1, 2, 3, 4, 4],
+          metal: [5, 4, 2, 0, -1, 1, 3, 4, 5, 6],
+          vocal: [-2, -1, 0, 2, 4, 5, 4, 2, 1, 0],
+          bass: [7, 8, 5, 2, 0, -1, -1, 0, 1, 1]
+        };
+
+        // State per band: current level (0..1), peak hold level (0..1), peak timer, slider gain (dB)
+        const bandGains = new Float32Array(10); // in dB (-12 .. +12)
+        const bandLevels = new Float32Array(10); // current rendered level (0..1)
+        const bandPeaks = new Float32Array(10); // floating peak hold (0..1)
+        const peakHoldExpiry = new Float64Array(10); // timestamp when peak starts falling
+
+        let sliderElements = [];
+        let vuLeftLevel = 0;
+        let vuRightLevel = 0;
+        let animFrameId = null;
+        let lastTimestamp = performance.now();
+
+        // 1. Build interactive 10-Band Slider Controls
+        if (eqSlidersContainer) {
+          eqSlidersContainer.innerHTML = '';
+          BANDS.forEach((band, idx) => {
+            const col = document.createElement('div');
+            col.className = 'eq-slider-col';
+            col.innerHTML = `
+              <span class="eq-slider-val" id="eqVal_${idx}">0dB</span>
+              <input type="range" class="eq-slider-input" id="eqInput_${idx}" min="-12" max="12" step="1" value="0" aria-label="${band.full} gain">
+              <span class="eq-slider-label">${band.label}</span>
+            `;
+
+            const input = col.querySelector('input');
+            const valSpan = col.querySelector('.eq-slider-val');
+
+            input.addEventListener('input', (e) => {
+              const val = parseInt(e.target.value, 10);
+              bandGains[idx] = val;
+              valSpan.textContent = `${val > 0 ? '+' : ''}${val}dB`;
+              valSpan.style.color = val === 0 ? 'var(--text-dim)' : 'var(--amber-gold)';
+              // Deselect preset buttons when user customizes
+              presetButtons.forEach(b => b.classList.remove('active'));
+            });
+
+            sliderElements.push({ input, valSpan });
+            eqSlidersContainer.appendChild(col);
+          });
+        }
+
+        // Apply a preset to all 10 bands
+        function applyPreset(name) {
+          const presetGains = PRESETS[name] || PRESETS.normal;
+          presetGains.forEach((gain, idx) => {
+            bandGains[idx] = gain;
+            if (sliderElements[idx]) {
+              sliderElements[idx].input.value = gain;
+              sliderElements[idx].valSpan.textContent = `${gain > 0 ? '+' : ''}${gain}dB`;
+              sliderElements[idx].valSpan.style.color = gain === 0 ? 'var(--text-dim)' : 'var(--amber-gold)';
+            }
+          });
+          presetButtons.forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.preset === name);
+          });
+        }
+
+        presetButtons.forEach(btn => {
+          btn.addEventListener('click', () => {
+            applyPreset(btn.dataset.preset);
+          });
+        });
+
+        if (btnEqReset) {
+          btnEqReset.addEventListener('click', () => {
+            applyPreset('normal');
+          });
+        }
+
+        // 2. Drawer Toggle / Close Interactions
+        function toggleDrawer(open) {
+          if (!playerEqDrawer) return;
+          const willOpen = open !== undefined ? open : !playerEqDrawer.classList.contains('open');
+          if (willOpen) {
+            playerEqDrawer.classList.add('open');
+            if (btnEqDrawer) btnEqDrawer.setAttribute('aria-expanded', 'true');
+            if (btnMobileEq) btnMobileEq.classList.add('active');
+          } else {
+            playerEqDrawer.classList.remove('open');
+            if (btnEqDrawer) btnEqDrawer.setAttribute('aria-expanded', 'false');
+            if (btnMobileEq) btnMobileEq.classList.remove('active');
+          }
+        }
+
+        if (btnEqDrawer) {
+          btnEqDrawer.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleDrawer();
+          });
+        }
+
+        if (btnMobileEq) {
+          btnMobileEq.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleDrawer();
+          });
+        }
+
+        if (btnEqClose) {
+          btnEqClose.addEventListener('click', () => toggleDrawer(false));
+        }
+
+        document.addEventListener('click', (e) => {
+          if (playerEqDrawer && playerEqDrawer.classList.contains('open')) {
+            if (!playerEqDrawer.contains(e.target) && 
+                (!btnEqDrawer || !btnEqDrawer.contains(e.target)) && 
+                (!btnMobileEq || !btnMobileEq.contains(e.target))) {
+              toggleDrawer(false);
+            }
+          }
+        });
+
+        window.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && playerEqDrawer && playerEqDrawer.classList.contains('open')) {
+            toggleDrawer(false);
+          }
+        });
+
+        // 3. High-Definition Canvas Setup
+        function setupCanvas(canvas, width, height) {
+          if (!canvas) return null;
+          const dpr = window.devicePixelRatio || 1;
+          canvas.width = Math.round(width * dpr);
+          canvas.height = Math.round(height * dpr);
+          const ctx = canvas.getContext('2d');
+          ctx.scale(dpr, dpr);
+          return { ctx, width, height };
+        }
+
+        const dockCtxData = setupCanvas(dockCanvas, 84, 22);
+        const drawerCtxData = setupCanvas(drawerCanvas, 460, 95);
+
+        // 4. Real-Time Audio Frequency Modeling & Animation Loop
+        function animateEqualizer(timestamp) {
+          const dt = Math.min(0.06, (timestamp - lastTimestamp) / 1000);
+          lastTimestamp = timestamp;
+
+          // Obtain playback time and volume
+          let currentTime = 0;
+          let masterVol = 1.0;
+          if (playerVolSlider) {
+            masterVol = Math.max(0, Math.min(1, parseInt(playerVolSlider.value, 10) / 100));
+          }
+          if (ytPlayer) {
+            if (typeof ytPlayer.isMuted === 'function' && ytPlayer.isMuted()) {
+              masterVol = 0;
+            }
+            if (typeof ytPlayer.getCurrentTime === 'function') {
+              try {
+                currentTime = ytPlayer.getCurrentTime() || 0;
+              } catch (e) {}
+            }
+          }
+
+          const timeSec = currentTime > 0 ? currentTime : timestamp / 1000;
+          const playing = isPlaying && masterVol > 0.01;
+
+          // Audio rhythm parameters modeling Bollywood melody & percussion
+          const bpm = 96; // Average romantic groove tempo
+          const beatPhase = (timeSec * (bpm / 60) * Math.PI * 2);
+          const kickEnvelope = Math.max(0, Math.sin(beatPhase)) ** 3.5;
+          const snareEnvelope = Math.max(0, Math.sin(beatPhase + Math.PI)) ** 3;
+          const vocalSwell = 0.5 + 0.5 * Math.sin(timeSec * 2.3 + Math.cos(timeSec * 0.7));
+          const melodyFlutter = 0.5 + 0.5 * Math.sin(timeSec * 5.8 + 1.2);
+
+          // Calculate target response for each band
+          for (let i = 0; i < 10; i++) {
+            let targetEnergy = 0;
+            if (playing) {
+              const band = BANDS[i];
+              // Frequency acoustic modeling:
+              if (i === 0) {
+                // 32Hz Sub-bass: Deep kick thump & tape rumble
+                targetEnergy = (0.28 + 0.65 * kickEnvelope + 0.15 * Math.sin(timeSec * 1.5)) * masterVol;
+              } else if (i === 1) {
+                // 64Hz Bass: Main kick drum + bassline notes
+                targetEnergy = (0.35 + 0.58 * kickEnvelope + 0.22 * Math.sin(timeSec * 3.1)) * masterVol;
+              } else if (i === 2) {
+                // 125Hz Dholak / Tabla Bayan: Warm acoustic bass punch
+                targetEnergy = (0.32 + 0.45 * kickEnvelope + 0.3 * snareEnvelope + 0.15 * Math.cos(timeSec * 4.2)) * masterVol;
+              } else if (i === 3) {
+                // 250Hz Warmth: Lower harmonic guitar & sarangi body
+                targetEnergy = (0.3 + 0.35 * vocalSwell + 0.25 * snareEnvelope + 0.15 * Math.sin(timeSec * 6.0)) * masterVol;
+              } else if (i === 4) {
+                // 500Hz Body: Male/Female chest resonance & acoustic piano
+                targetEnergy = (0.38 + 0.48 * vocalSwell + 0.2 * melodyFlutter) * masterVol;
+              } else if (i === 5) {
+                // 1kHz Vocal Lead: Emotional vocal delivery & harmonium
+                targetEnergy = (0.42 + 0.52 * vocalSwell + 0.25 * melodyFlutter + 0.1 * Math.sin(timeSec * 8.4)) * masterVol;
+              } else if (i === 6) {
+                // 2kHz Presence: Sitar, flute clarity, vocal bite
+                targetEnergy = (0.38 + 0.45 * melodyFlutter + 0.25 * vocalSwell + 0.15 * snareEnvelope) * masterVol;
+              } else if (i === 7) {
+                // 4kHz Clarity: Percussion attack, tambourine & ghungroo
+                targetEnergy = (0.32 + 0.48 * snareEnvelope + 0.25 * Math.sin(timeSec * 11.2) ** 2) * masterVol;
+              } else if (i === 8) {
+                // 8kHz Sparkle: Shakers, cymbals, strings shimmer
+                targetEnergy = (0.28 + 0.42 * snareEnvelope + 0.28 * (Math.sin(timeSec * 14.5) * 0.5 + 0.5)) * masterVol;
+              } else {
+                // 16kHz Tape Air: High-end cassette sheen & analog atmosphere
+                targetEnergy = (0.25 + 0.35 * (Math.sin(timeSec * 18.2) * 0.5 + 0.5) + 0.2 * Math.random()) * masterVol;
+              }
+
+              // Apply User EQ Gain Modifier (dB converted to linear multiplier: -12dB -> ~0.35x, +12dB -> ~2.1x)
+              const gainFactor = Math.pow(10, bandGains[i] / 24);
+              targetEnergy = Math.max(0.04, Math.min(1.0, targetEnergy * gainFactor * band.factor));
+            } else {
+              targetEnergy = 0;
+            }
+
+            // Ballistic Physics: Fast snappy attack + hardware smooth decay
+            const curr = bandLevels[i];
+            if (targetEnergy > curr) {
+              bandLevels[i] += (targetEnergy - curr) * Math.min(1, dt * 26); // Fast attack
+            } else {
+              bandLevels[i] += (targetEnergy - curr) * Math.min(1, dt * 8.5); // Analog decay
+            }
+
+            // Peak Hold Physics: floating peak cap drops with gravity
+            if (bandLevels[i] >= bandPeaks[i]) {
+              bandPeaks[i] = bandLevels[i];
+              peakHoldExpiry[i] = timestamp + 420; // Hold peak for 420ms
+            } else if (timestamp > peakHoldExpiry[i]) {
+              bandPeaks[i] = Math.max(0, bandPeaks[i] - dt * 1.35); // Gravity fall-off
+            }
+          }
+
+          // Stereo VU Meters (Left & Right channel dynamics with stereo image)
+          if (playing) {
+            const rawL = (bandLevels[1] * 0.35 + bandLevels[4] * 0.35 + bandLevels[7] * 0.3) * (0.95 + 0.08 * Math.sin(timeSec * 3.4));
+            const rawR = (bandLevels[1] * 0.35 + bandLevels[5] * 0.35 + bandLevels[8] * 0.3) * (0.95 + 0.08 * Math.cos(timeSec * 3.8));
+            vuLeftLevel += (Math.max(0, Math.min(1, rawL)) - vuLeftLevel) * Math.min(1, dt * 18);
+            vuRightLevel += (Math.max(0, Math.min(1, rawR)) - vuRightLevel) * Math.min(1, dt * 18);
+          } else {
+            vuLeftLevel *= Math.max(0, 1 - dt * 9);
+            vuRightLevel *= Math.max(0, 1 - dt * 9);
+          }
+
+          updateVuMeters(vuLeftLevel, vuRightLevel);
+
+          // Render Canvases
+          renderDockCanvas(dockCtxData);
+          renderDrawerCanvas(drawerCtxData);
+
+          animFrameId = requestAnimationFrame(animateEqualizer);
+        }
+
+        // Update Dual Stereo VU Meters in the Drawer
+        function updateVuMeters(lvlLeft, lvlRight) {
+          if (vuFillL) vuFillL.style.width = `${Math.round(lvlLeft * 100)}%`;
+          if (vuFillR) vuFillR.style.width = `${Math.round(lvlRight * 100)}%`;
+
+          function formatDb(lvl) {
+            if (lvl < 0.03) return '-∞ dB';
+            const db = Math.round((20 * Math.log10(lvl)) * 10) / 10;
+            return `${db > 0 ? '+' : ''}${db.toFixed(1)} dB`;
+          }
+
+          if (vuValL) vuValL.textContent = formatDb(lvlLeft);
+          if (vuValR) vuValR.textContent = formatDb(lvlRight);
+        }
+
+        // Render Mini Dock Spectrum Analyzer (84x22, 10 bands)
+        function renderDockCanvas(canvasData) {
+          if (!canvasData) return;
+          const { ctx, width, height } = canvasData;
+          ctx.clearRect(0, 0, width, height);
+
+          // Background faceplate
+          ctx.fillStyle = '#080102';
+          ctx.fillRect(0, 0, width, height);
+
+          const numBands = 10;
+          const colWidth = 6;
+          const colGap = 2;
+          const totalColsWidth = numBands * colWidth + (numBands - 1) * colGap; // 78px
+          const startX = Math.round((width - totalColsWidth) / 2); // 3px margin
+          const numSegments = 7;
+          const segHeight = 2.2;
+          const segGap = 1.0;
+
+          for (let i = 0; i < numBands; i++) {
+            const bx = startX + i * (colWidth + colGap);
+            const level = bandLevels[i];
+            const peak = bandPeaks[i];
+            const litSegments = Math.round(level * numSegments);
+
+            // Draw stacked LED segments
+            for (let s = 0; s < numSegments; s++) {
+              const sy = height - 1 - (s + 1) * (segHeight + segGap);
+              const isLit = s < litSegments;
+
+              if (isLit) {
+                // Color ramp: Green (bottom) -> Amber-Gold (mid) -> Red (top overload)
+                if (s >= numSegments - 1) {
+                  ctx.fillStyle = '#ef4444'; // Red clip
+                } else if (s >= numSegments - 3) {
+                  ctx.fillStyle = '#f5b335'; // Amber-gold
+                } else {
+                  ctx.fillStyle = '#10b981'; // Vintage emerald green
+                }
+              } else {
+                // Subtle ghost LED frame
+                ctx.fillStyle = 'rgba(245, 179, 53, 0.08)';
+              }
+
+              ctx.fillRect(bx, sy, colWidth, segHeight);
+            }
+
+            // Floating Peak Hold indicator
+            if (peak > 0.05) {
+              const peakSeg = Math.min(numSegments - 1, Math.round(peak * numSegments) - 1);
+              if (peakSeg >= 0) {
+                const py = height - 1 - (peakSeg + 1) * (segHeight + segGap);
+                ctx.fillStyle = peakSeg >= numSegments - 1 ? '#ff7878' : '#ffd574';
+                ctx.fillRect(bx, py, colWidth, segHeight);
+              }
+            }
+          }
+        }
+
+        // Render Expanded Hi-Fi Drawer Spectrum Analyzer (460x95, 10 bands)
+        function renderDrawerCanvas(canvasData) {
+          if (!canvasData) return;
+          const { ctx, width, height } = canvasData;
+          ctx.clearRect(0, 0, width, height);
+
+          // Deep analog CRT screen gradient
+          const bgGrad = ctx.createLinearGradient(0, 0, 0, height);
+          bgGrad.addColorStop(0, '#0c0103');
+          bgGrad.addColorStop(1, '#050001');
+          ctx.fillStyle = bgGrad;
+          ctx.fillRect(0, 0, width, height);
+
+          // Reference Grid Lines (-12dB, -6dB, 0dB, +6dB, +12dB)
+          ctx.strokeStyle = 'rgba(245, 179, 53, 0.09)';
+          ctx.lineWidth = 1;
+          ctx.setLineDash([3, 3]);
+          const gridSteps = [0.15, 0.35, 0.55, 0.75, 0.92];
+          gridSteps.forEach(ratio => {
+            const gy = Math.round(height * (1 - ratio));
+            ctx.beginPath();
+            ctx.moveTo(8, gy);
+            ctx.lineTo(width - 8, gy);
+            ctx.stroke();
+          });
+          ctx.setLineDash([]); // Reset line dash
+
+          const numBands = 10;
+          const colWidth = 34;
+          const colGap = 8;
+          const totalWidth = numBands * colWidth + (numBands - 1) * colGap; // 412px
+          const startX = Math.round((width - totalWidth) / 2); // 24px
+          const numSegments = 16;
+          const segHeight = 3.6;
+          const segGap = 1.4;
+
+          const bandCenterPoints = [];
+
+          // 1. Draw 10-Band Segmented LED Ladders
+          for (let i = 0; i < numBands; i++) {
+            const bx = startX + i * (colWidth + colGap);
+            const level = bandLevels[i];
+            const peak = bandPeaks[i];
+            const litSegments = Math.round(level * numSegments);
+
+            // Record band apex for spline curve
+            const apexY = height - 12 - (litSegments * (segHeight + segGap));
+            bandCenterPoints.push({ x: bx + colWidth / 2, y: Math.max(10, Math.min(height - 12, apexY)) });
+
+            // Stacked LED Bars
+            for (let s = 0; s < numSegments; s++) {
+              const sy = height - 12 - (s + 1) * (segHeight + segGap);
+              const isLit = s < litSegments;
+
+              if (isLit) {
+                if (s >= numSegments - 2) {
+                  ctx.fillStyle = '#ef4444'; // Red clip / +6dB peak
+                } else if (s >= numSegments - 6) {
+                  ctx.fillStyle = '#f5b335'; // Amber-gold
+                } else {
+                  ctx.fillStyle = '#10b981'; // Emerald green
+                }
+              } else {
+                ctx.fillStyle = 'rgba(245, 179, 53, 0.06)'; // Unlit LED ghost
+              }
+
+              ctx.beginPath();
+              // Slightly rounded LED blocks
+              ctx.roundRect ? ctx.roundRect(bx, sy, colWidth, segHeight, 1.5) : ctx.rect(bx, sy, colWidth, segHeight);
+              ctx.fill();
+            }
+
+            // Floating Glowing Peak Hold Bar
+            if (peak > 0.04) {
+              const peakSeg = Math.min(numSegments - 1, Math.round(peak * numSegments) - 1);
+              if (peakSeg >= 0) {
+                const py = height - 12 - (peakSeg + 1) * (segHeight + segGap);
+                ctx.save();
+                ctx.shadowColor = peakSeg >= numSegments - 2 ? '#ef4444' : '#f5b335';
+                ctx.shadowBlur = 8;
+                ctx.fillStyle = peakSeg >= numSegments - 2 ? '#ff6060' : '#ffe17d';
+                ctx.fillRect(bx, py, colWidth, segHeight);
+                ctx.restore();
+              }
+            }
+          }
+
+          // 2. Continuous Analog Spectrum Spline Curve Overlay
+          if (bandCenterPoints.length > 1) {
+            ctx.save();
+            ctx.beginPath();
+            ctx.moveTo(bandCenterPoints[0].x, bandCenterPoints[0].y);
+
+            for (let i = 0; i < bandCenterPoints.length - 1; i++) {
+              const p0 = bandCenterPoints[i];
+              const p1 = bandCenterPoints[i + 1];
+              const midX = (p0.x + p1.x) / 2;
+              const midY = (p0.y + p1.y) / 2;
+              ctx.quadraticCurveTo(p0.x, p0.y, midX, midY);
+            }
+            const lastP = bandCenterPoints[bandCenterPoints.length - 1];
+            ctx.lineTo(lastP.x, lastP.y);
+
+            // Glowing neon curve
+            ctx.shadowColor = 'rgba(245, 179, 53, 0.7)';
+            ctx.shadowBlur = 6;
+            ctx.strokeStyle = '#ffd574';
+            ctx.lineWidth = 1.8;
+            ctx.stroke();
+
+            // Gradient area fill underneath the curve
+            ctx.lineTo(lastP.x, height - 10);
+            ctx.lineTo(bandCenterPoints[0].x, height - 10);
+            ctx.closePath();
+            const curveFill = ctx.createLinearGradient(0, 0, 0, height);
+            curveFill.addColorStop(0, 'rgba(245, 179, 53, 0.22)');
+            curveFill.addColorStop(1, 'rgba(245, 179, 53, 0.0)');
+            ctx.fillStyle = curveFill;
+            ctx.fill();
+            ctx.restore();
+          }
+        }
+
+        // Start animation loop
+        animFrameId = requestAnimationFrame(animateEqualizer);
+      })();
+
+      /* --- 7. SMOOTH NAVIGATION HIGHLIGHTING --- */
       const navLinks = document.querySelectorAll('.nav-item');
       navLinks.forEach((link) => {
         link.addEventListener('click', () => {
