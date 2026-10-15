@@ -1230,7 +1230,7 @@
 
     /* Bottom clearance spacer to guarantee zero overlap with player */
     .page-bottom-clearance {
-      height: 40px;
+      height: 120px;
       width: 100%;
     }
 
@@ -1392,7 +1392,7 @@
       border: 1px solid rgba(245, 179, 53, 0.3);
     }
 
-    /* EXPANDED HI-FI GRAPHIC EQUALIZER DRAWER PANEL */
+    /* EXPANDED HI-FI 10-BAND GRAPHIC EQUALIZER DRAWER PANEL */
     .player-eq-drawer {
       position: absolute;
       bottom: calc(100% + 14px);
@@ -1401,11 +1401,13 @@
       border: 1.5px solid rgba(245, 179, 53, 0.45);
       border-radius: 16px;
       padding: 1.1rem 1.25rem;
-      width: min(94vw, 500px);
+      width: min(94vw, 520px);
+      max-height: 80vh;
+      overflow-y: auto;
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.95), 0 0 30px rgba(245, 179, 53, 0.25);
       display: none;
       flex-direction: column;
-      gap: 0.8rem;
+      gap: 0.75rem;
       z-index: 9999;
       backdrop-filter: blur(24px);
       -webkit-backdrop-filter: blur(24px);
@@ -1465,6 +1467,61 @@
       0%, 100% { opacity: 1; transform: scale(1); }
       50% { opacity: 0.4; transform: scale(0.8); }
     }
+    .eq-header-right-tools {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .eq-toggle-group {
+      display: flex;
+      align-items: center;
+    }
+    .eq-switch-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      cursor: pointer;
+      user-select: none;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      font-weight: 800;
+      color: var(--amber-gold);
+    }
+    .eq-toggle-checkbox {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .eq-switch-lever {
+      position: relative;
+      display: inline-block;
+      width: 32px;
+      height: 16px;
+      background: #200407;
+      border: 1px solid rgba(245, 179, 53, 0.4);
+      border-radius: 9999px;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .eq-switch-lever::after {
+      content: '';
+      position: absolute;
+      top: 1px;
+      left: 1px;
+      width: 12px;
+      height: 12px;
+      background: var(--text-muted);
+      border-radius: 50%;
+      transition: transform 0.2s, background 0.2s;
+    }
+    .eq-toggle-checkbox:checked + .eq-switch-lever {
+      background: rgba(245, 179, 53, 0.25);
+      border-color: var(--amber-gold);
+    }
+    .eq-toggle-checkbox:checked + .eq-switch-lever::after {
+      transform: translateX(16px);
+      background: var(--amber-gold);
+      box-shadow: 0 0 6px rgba(245, 179, 53, 0.8);
+    }
     .btn-eq-close {
       background: none;
       border: none;
@@ -1478,6 +1535,32 @@
     }
     .btn-eq-close:hover {
       color: var(--amber-gold);
+    }
+
+    /* Live Audio Source Status & Processing Notice */
+    .eq-source-notice {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+      background: rgba(245, 179, 53, 0.05);
+      border: 1px dashed rgba(245, 179, 53, 0.25);
+      border-radius: 8px;
+      padding: 0.45rem 0.65rem;
+    }
+    .eq-source-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: var(--amber-gold);
+    }
+    .eq-source-desc {
+      font-family: var(--font-mono);
+      font-size: 0.58rem;
+      color: var(--text-dim);
+      line-height: 1.35;
     }
 
     /* Dual Stereo VU Meter Section */
@@ -1548,7 +1631,56 @@
       pointer-events: none;
     }
 
-    /* Tape Bias Presets */
+    /* Master Bass and Treble Controls */
+    .eq-master-tone-cluster {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+      background: #0d0103;
+      border: 1px solid rgba(245, 179, 53, 0.2);
+      border-radius: 8px;
+      padding: 0.55rem 0.8rem;
+    }
+    .eq-master-tone-col {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+    .eq-tone-label-row {
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      color: var(--amber-gold);
+      font-weight: 700;
+    }
+    .eq-tone-val {
+      color: var(--text-dim);
+    }
+    .eq-horizontal-slider {
+      width: 100%;
+      height: 6px;
+      -webkit-appearance: none;
+      appearance: none;
+      background: #1e0307;
+      border: 1px solid rgba(245, 179, 53, 0.25);
+      border-radius: 4px;
+      outline: none;
+      cursor: pointer;
+    }
+    .eq-horizontal-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--amber-gold);
+      box-shadow: 0 0 6px rgba(245, 179, 53, 0.5);
+      cursor: pointer;
+      border: 1.5px solid #140204;
+    }
+
+    /* Tape Bias & Presets: Flat, Classic Bollywood, Bass Boost, Vocal Clarity, Warm Retro, Acoustic, Rock */
     .eq-presets-row {
       display: flex;
       flex-direction: column;
@@ -1572,7 +1704,7 @@
       border: 1px solid rgba(245, 179, 53, 0.25);
       color: var(--text-cream);
       font-family: var(--font-mono);
-      font-size: 0.66rem;
+      font-size: 0.65rem;
       padding: 0.22rem 0.52rem;
       border-radius: 6px;
       cursor: pointer;
@@ -1611,7 +1743,7 @@
     }
     .eq-slider-val {
       font-family: var(--font-mono);
-      font-size: 0.55rem;
+      font-size: 0.54rem;
       color: var(--text-dim);
     }
     .eq-slider-input {
@@ -2008,6 +2140,9 @@
       .btn-mobile-eq {
         display: inline-flex !important;
       }
+      .page-bottom-clearance {
+        height: 180px;
+      }
       .player-eq-drawer {
         left: 50% !important;
         transform: translateX(-50%) !important;
@@ -2015,6 +2150,13 @@
         max-width: 94vw !important;
         bottom: calc(100% + 8px) !important;
         padding: 0.85rem !important;
+      }
+      .player-eq-drawer.open {
+        animation: eqDrawerFadeInMobile 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+      }
+      @keyframes eqDrawerFadeInMobile {
+        from { opacity: 0; transform: translate(-50%, 10px); }
+        to { opacity: 1; transform: translate(-50%, 0); }
       }
       .drawer-eq-canvas {
         height: 75px !important;
@@ -2141,16 +2283,18 @@
       100% { filter: contrast(100%); transform: translate(0, 0); }
     }
 
-    /* YouTube Hidden Player */
+    /* High-Fidelity YouTube Host Player (kept in-viewport behind player dock to prevent browser/DASH bitrate down-throttling) */
     #yt-hidden-player {
       position: fixed;
-      bottom: 0;
-      left: -9999px;
-      width: 640px;
-      height: 360px;
-      opacity: 0;
+      bottom: 8px;
+      left: 8px;
+      width: 240px;
+      height: 160px;
+      opacity: 0.001;
       pointer-events: none;
-      z-index: -9999;
+      z-index: 1;
+      overflow: hidden;
+      border: none;
     }
   </style>
 </head>
@@ -2166,8 +2310,10 @@
 
   <div class="vignette-layer" aria-hidden="true"></div>
 
-  <!-- Offscreen 640x360 Host for High-Fidelity YouTube Audio API -->
+  <!-- In-Viewport Host for High-Fidelity YouTube Audio API -->
   <div id="yt-hidden-player" aria-hidden="true"></div>
+  <!-- Dedicated HTML5 High-Fidelity Audio Element with Full Web Audio API 10-Band Biquad DSP -->
+  <audio id="hifiAudioPlayer" crossorigin="anonymous" preload="auto" style="display:none;"></audio>
 
   <!-- ==========================================================================
        HEADER (SLIM FULL-WIDTH BURGUNDY TEXTURED HEADER)
@@ -2767,7 +2913,7 @@
           <div class="multiband-eq-display" aria-hidden="true">
             <canvas id="dockEqCanvas" width="84" height="22" class="dock-eq-canvas"></canvas>
             <div class="eq-band-labels">
-              <span>32</span><span>64</span><span>125</span><span>250</span><span>500</span><span>1k</span><span>2k</span><span>4k</span><span>8k</span><span>16k</span>
+              <span>31</span><span>62</span><span>125</span><span>250</span><span>500</span><span>1k</span><span>2k</span><span>4k</span><span>8k</span><span>16k</span>
             </div>
           </div>
           <span class="eq-badge-text">EQ</span>
@@ -2805,60 +2951,69 @@
         <!-- Playlist Popover Menu -->
         <div class="playlist-popover-menu" id="playlistPopoverMenu" role="menu">
           <div class="playlist-popover-title">Choose Mixtape Playlist</div>
-          <button type="button" class="playlist-item-btn active" data-tape-key="aashiqui-2" role="menuitem">
-            <img src="https://i.ytimg.com/vi/iEkd7bGXP4E/hqdefault.jpg" alt="" onerror="this.onerror=null; this.src='/images/retro_cassette_fallback.jpg';">
+          <!-- Flagship Hi-Fi Direct Master Track with 100% Web Audio Biquad Filter DSP Processing -->
+          <button type="button" class="playlist-item-btn" data-tape-key="hifi-master" role="menuitem">
+            <img src="/images/vintage_cassette_cover_1791736127552.jpg" alt="" onerror="this.onerror=null; this.src='/images/retro_cassette_fallback.jpg';">
             <div>
-              <strong>Aashiqui 2 💔</strong><br>
-              <small style="color:var(--text-dim);">Adhoori Mohabbat</small>
+              <strong style="color:var(--amber-gold);">★ Hi-Fi Studio Tape Master 🎛️</strong><br>
+              <small style="color:#34d399;">Full 10-Band Web Audio DSP</small>
+            </div>
+          </button>
+
+          <button type="button" class="playlist-item-btn active" data-tape-key="aashiqui-2" role="menuitem">
+            <img src="https://i.ytimg.com/vi/Umqb9KENgmk/hqdefault.jpg" alt="" onerror="this.onerror=null; this.src='/images/retro_cassette_fallback.jpg';">
+            <div>
+              <strong>Aashiqui 2 (Tum Hi Ho) 💔</strong><br>
+              <small style="color:var(--text-dim);">T-Series Official Studio Master</small>
             </div>
           </button>
           <button type="button" class="playlist-item-btn" data-tape-key="spb-salman" role="menuitem">
             <img src="https://i.ytimg.com/vi/5FD6Psi7fyk/hqdefault.jpg" alt="" onerror="this.onerror=null; this.src='/images/retro_cassette_fallback.jpg';">
             <div>
               <strong>90s Salman & SPB</strong><br>
-              <small style="color:var(--text-dim);">Voice of Prem</small>
+              <small style="color:var(--text-dim);">Saregama Official Jukebox</small>
             </div>
           </button>
           <button type="button" class="playlist-item-btn" data-tape-key="kumar-sanu" role="menuitem">
-            <img src="https://i.ytimg.com/vi/xp5j2IHyTgs/hqdefault.jpg" alt="" onerror="this.onerror=null; this.src='/images/retro_cassette_fallback.jpg';">
+            <img src="https://i.ytimg.com/vi/7obFFUPv4Hs/hqdefault.jpg" alt="" onerror="this.onerror=null; this.src='/images/retro_cassette_fallback.jpg';">
             <div>
               <strong>Kumar Sanu Hits</strong><br>
-              <small style="color:var(--text-dim);">90s Romantic Jukebox</small>
+              <small style="color:var(--text-dim);">Tips Official 90s Hits</small>
             </div>
           </button>
           <button type="button" class="playlist-item-btn" data-tape-key="kishore-kumar" role="menuitem">
-            <img src="https://i.ytimg.com/vi/ebw1zHtleFY/hqdefault.jpg" alt="" onerror="this.onerror=null; this.src='/images/retro_cassette_fallback.jpg';">
+            <img src="https://i.ytimg.com/vi/l3Q_zHd3kCA/hqdefault.jpg" alt="" onerror="this.onerror=null; this.src='/images/retro_cassette_fallback.jpg';">
             <div>
               <strong>Kishore Kumar Hits</strong><br>
-              <small style="color:var(--text-dim);">Evergreen Radio Melodies</small>
+              <small style="color:var(--text-dim);">Saregama Official Audio Master</small>
             </div>
           </button>
           <button type="button" class="playlist-item-btn" data-tape-key="bollywood-90s-duets" role="menuitem">
-            <img src="https://i.ytimg.com/vi/9JJuXIi5YAU/hqdefault.jpg" alt="" onerror="this.onerror=null; this.src='/images/retro_cassette_fallback.jpg';">
+            <img src="https://i.ytimg.com/vi/PWyXe6fzsmM/hqdefault.jpg" alt="" onerror="this.onerror=null; this.src='/images/retro_cassette_fallback.jpg';">
             <div>
               <strong>90s Love Duets</strong><br>
-              <small style="color:var(--text-dim);">Udit, Alka, Sanu</small>
+              <small style="color:var(--text-dim);">Tips Official Studio Romance</small>
             </div>
           </button>
           <button type="button" class="playlist-item-btn" data-tape-key="ankit-tiwari" role="menuitem">
-            <img src="https://i.ytimg.com/vi/gFyZGsTR1FI/hqdefault.jpg" alt="" onerror="this.onerror=null; this.src='/images/retro_cassette_fallback.jpg';">
+            <img src="https://i.ytimg.com/vi/tQL-gx7PeBc/hqdefault.jpg" alt="" onerror="this.onerror=null; this.src='/images/retro_cassette_fallback.jpg';">
             <div>
               <strong>Best of Ankit Tiwari</strong><br>
-              <small style="color:var(--text-dim);">Sunn Raha Hai Na Tu</small>
+              <small style="color:var(--text-dim);">Sunn Raha Hai Na Tu (T-Series)</small>
             </div>
           </button>
           <button type="button" class="playlist-item-btn" data-tape-key="arijit-singh" role="menuitem">
             <img src="https://i.ytimg.com/vi/kXHiIxx2atA/hqdefault.jpg" alt="" onerror="this.onerror=null; this.src='/images/retro_cassette_fallback.jpg';">
             <div>
               <strong>Best of Arijit Singh</strong><br>
-              <small style="color:var(--text-dim);">Soulful Romantic Classics</small>
+              <small style="color:var(--text-dim);">Zee Music Company Official</small>
             </div>
           </button>
           <button type="button" class="playlist-item-btn" data-tape-key="dil-ka-telephone" role="menuitem">
             <img src="https://i.ytimg.com/vi/a3B2glol4IU/hqdefault.jpg" alt="" onerror="this.onerror=null; this.src='/images/retro_cassette_fallback.jpg';">
             <div>
               <strong>Dil Ka Telephone Mix ☎️</strong><br>
-              <small style="color:var(--text-dim);">Dream Girl · YouTube Mix</small>
+              <small style="color:var(--text-dim);">Zee Music Company Official</small>
             </div>
           </button>
         </div>
@@ -2871,19 +3026,19 @@
             <button type="button" class="player-heart-toggle" id="playerHeartBtn" aria-label="Add to favorites" title="Favorite">♡</button>
             <span class="player-song-title" id="playerSongTitle">Aashiqui 2 — Adhoori Mohabbat 💔</span>
           </div>
-          <div class="player-song-subtitle" id="playerSubtitle">Arijit Singh, Ankit Tiwari · Tum Hi Ho</div>
+          <div class="player-song-subtitle" id="playerSubtitle">Arijit Singh, Mithoon · Tum Hi Ho (T-Series Official)</div>
         </div>
 
         <div class="player-art-thumbnail">
           <img 
             id="playerThumbImg" 
-            src="https://i.ytimg.com/vi/iEkd7bGXP4E/hqdefault.jpg" 
+            src="https://i.ytimg.com/vi/Umqb9KENgmk/hqdefault.jpg" 
             alt="Currently playing song artwork"
             onerror="this.onerror=null; this.src='/images/retro_cassette_fallback.jpg';"
           />
         </div>
 
-        <a href="https://youtu.be/iEkd7bGXP4E?si=zC3Iw3DdIp-j1d1v" target="_blank" rel="noopener noreferrer" class="btn-yt-direct" id="btnYtDirect" aria-label="Listen directly on YouTube" title="Listen on YouTube ↗">
+        <a href="https://www.youtube.com/watch?v=Umqb9KENgmk" target="_blank" rel="noopener noreferrer" class="btn-yt-direct" id="btnYtDirect" aria-label="Listen directly on YouTube" title="Listen on YouTube ↗">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19 19H5V5h7V3H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
         </a>
       </div>
@@ -2896,9 +3051,29 @@
       <div class="eq-drawer-header">
         <div class="eq-drawer-title-group">
           <h3 class="eq-drawer-title">10-Band Graphic Equalizer</h3>
-          <span class="eq-live-pill"><span class="eq-live-dot"></span> Real-Time Audio</span>
+          <span class="eq-live-pill" id="eqLivePill"><span class="eq-live-dot"></span> <span id="eqLivePillText">Real-Time DSP</span></span>
         </div>
-        <button type="button" class="btn-eq-close" id="btnEqClose" aria-label="Close Equalizer Panel">✕</button>
+        <div class="eq-header-right-tools">
+          <div class="eq-toggle-group">
+            <label class="eq-switch-label" for="eqToggleSwitch" title="Enable or Bypass Equalizer">
+              <span class="eq-toggle-status" id="eqToggleText">EQ ON</span>
+              <input type="checkbox" id="eqToggleSwitch" checked class="eq-toggle-checkbox">
+              <span class="eq-switch-lever"></span>
+            </label>
+          </div>
+          <button type="button" class="btn-eq-close" id="btnEqClose" aria-label="Close Equalizer Panel">✕</button>
+        </div>
+      </div>
+
+      <!-- Live Audio Source Status & Processing Notice -->
+      <div class="eq-source-notice" id="eqSourceNotice">
+        <div class="eq-source-pill" id="eqSourcePill">
+          <span class="eq-source-icon">🎛️</span>
+          <span id="eqSourceLabel">Web Audio API 10-Band Biquad DSP Ready</span>
+        </div>
+        <span class="eq-source-desc" id="eqSourceDesc">
+          HTML5 Studio Masters are directly filtered by 10 hardware BiquadFilterNodes. YouTube streams play via official high-bitrate embed (CORS protected).
+        </span>
       </div>
 
       <!-- Stereo Dual VU Meters (L & R Channels) -->
@@ -2935,26 +3110,46 @@
         <div class="drawer-eq-glass-glare"></div>
       </div>
 
-      <!-- Nostalgic Tape Bias & Acoustic Presets -->
-      <div class="eq-presets-row">
-        <span class="eq-presets-label">Tape Bias & EQ Presets</span>
-        <div class="eq-presets-chips">
-          <button type="button" class="btn-eq-preset active" data-preset="normal">Tape I Normal (Fe2O3)</button>
-          <button type="button" class="btn-eq-preset" data-preset="chrome">Tape II Chrome (CrO2)</button>
-          <button type="button" class="btn-eq-preset" data-preset="metal">Tape IV Metal Boost</button>
-          <button type="button" class="btn-eq-preset" data-preset="vocal">Mehfil Vocals</button>
-          <button type="button" class="btn-eq-preset" data-preset="bass">Monsoon Dholak</button>
+      <!-- Master Bass and Treble Controls -->
+      <div class="eq-master-tone-cluster">
+        <div class="eq-master-tone-col">
+          <div class="eq-tone-label-row">
+            <span>BASS BOOST / CUT</span>
+            <span class="eq-tone-val" id="eqBassVal">0.0 dB</span>
+          </div>
+          <input type="range" class="eq-horizontal-slider" id="eqBassSlider" min="-12" max="12" step="0.5" value="0" aria-label="Master Bass Gain">
+        </div>
+        <div class="eq-master-tone-col">
+          <div class="eq-tone-label-row">
+            <span>TREBLE BOOST / CUT</span>
+            <span class="eq-tone-val" id="eqTrebleVal">0.0 dB</span>
+          </div>
+          <input type="range" class="eq-horizontal-slider" id="eqTrebleSlider" min="-12" max="12" step="0.5" value="0" aria-label="Master Treble Gain">
         </div>
       </div>
 
-      <!-- 10-Band Sliders -->
+      <!-- Presets: Flat, Classic Bollywood, Bass Boost, Vocal Clarity, Warm Retro, Acoustic, Rock -->
+      <div class="eq-presets-row">
+        <span class="eq-presets-label">Tape Bias & Acoustic Presets</span>
+        <div class="eq-presets-chips">
+          <button type="button" class="btn-eq-preset active" data-preset="flat">Flat</button>
+          <button type="button" class="btn-eq-preset" data-preset="classic-bollywood">Classic Bollywood</button>
+          <button type="button" class="btn-eq-preset" data-preset="bass-boost">Bass Boost</button>
+          <button type="button" class="btn-eq-preset" data-preset="vocal-clarity">Vocal Clarity</button>
+          <button type="button" class="btn-eq-preset" data-preset="warm-retro">Warm Retro</button>
+          <button type="button" class="btn-eq-preset" data-preset="acoustic">Acoustic</button>
+          <button type="button" class="btn-eq-preset" data-preset="rock">Rock</button>
+        </div>
+      </div>
+
+      <!-- 10-Band Sliders (31 Hz, 62 Hz, 125 Hz, 250 Hz, 500 Hz, 1 kHz, 2 kHz, 4 kHz, 8 kHz, 16 kHz) -->
       <div class="eq-sliders-container" id="eqSlidersContainer">
-        <!-- Populated dynamically in JS for 32, 64, 125, 250, 500, 1k, 2k, 4k, 8k, 16k -->
+        <!-- Populated dynamically in JS for 31, 62, 125, 250, 500, 1k, 2k, 4k, 8k, 16k -->
       </div>
 
       <div class="eq-footer-actions">
-        <span class="eq-footer-note">Analog tape response simulation & Web Audio filtering</span>
-        <button type="button" class="btn-eq-reset" id="btnEqReset">Reset Flat (0dB)</button>
+        <span class="eq-footer-note">Web Audio API 10-Band BiquadFilterNode chain + Soft Limiter</span>
+        <button type="button" class="btn-eq-reset" id="btnEqReset">Reset (0 dB)</button>
       </div>
     </div>
   </aside>
@@ -2988,21 +3183,31 @@
     (function () {
       'use strict';
 
-      /* --- 1. ACCURATE NOSTALGIC MIXTAPES & YOUTUBE STREAMING ENGINE --- */
+      /* --- 1. ACCURATE NOSTALGIC MIXTAPES & DUAL AUDIO ENGINE --- */
       const MIXTAPES = {
+        'hifi-master': {
+          id: 'hifi-master',
+          title: 'Cassette Wala Pyaar — Studio Tape Master (10-Band DSP)',
+          singer: 'Vintage Bollywood Studio Orchestra · Full 10-Band Web Audio DSP Active',
+          label: 'Hi-Fi Tape Master 🎛️',
+          thumb: '/images/vintage_cassette_cover_1791736127552.jpg',
+          audioUrl: '/audio/retro_cassette_master.wav',
+          isDirectAudio: true,
+          url: '/audio/retro_cassette_master.wav'
+        },
         'aashiqui-2': {
           id: 'aashiqui-2',
-          title: 'Aashiqui 2 — Adhoori Mohabbat 💔',
-          singer: 'Arijit Singh, Ankit Tiwari · Tum Hi Ho',
+          title: 'Aashiqui 2 — Tum Hi Ho 💔',
+          singer: 'Arijit Singh, Mithoon · T-Series Official Master',
           label: 'Aashiqui 2 💔',
-          thumb: 'https://i.ytimg.com/vi/iEkd7bGXP4E/hqdefault.jpg',
-          videoId: 'iEkd7bGXP4E',
-          url: 'https://youtu.be/iEkd7bGXP4E?si=zC3Iw3DdIp-j1d1v'
+          thumb: 'https://i.ytimg.com/vi/Umqb9KENgmk/hqdefault.jpg',
+          videoId: 'Umqb9KENgmk',
+          url: 'https://www.youtube.com/watch?v=Umqb9KENgmk'
         },
         'spb-salman': {
           id: 'spb-salman',
           title: 'Maine Pyar Kiya & 90s Prem Hits',
-          singer: 'S.P. Balasubrahmanyam · Voice of Prem',
+          singer: 'S.P. Balasubrahmanyam · Saregama Official Audio',
           label: '90s Salman & SPB',
           thumb: 'https://i.ytimg.com/vi/5FD6Psi7fyk/hqdefault.jpg',
           videoId: '5FD6Psi7fyk',
@@ -3010,44 +3215,44 @@
         },
         'kumar-sanu': {
           id: 'kumar-sanu',
-          title: 'Kumar Sanu Romantic Hits',
-          singer: 'Kumar Sanu (with Alka Yagnik)',
+          title: 'Kumar Sanu Romantic 90s Hits',
+          singer: 'Kumar Sanu · Tips Official Superhit Collection',
           label: 'Kumar Sanu Hits',
-          thumb: 'https://i.ytimg.com/vi/xp5j2IHyTgs/hqdefault.jpg',
-          videoId: 'xp5j2IHyTgs',
-          url: 'https://youtu.be/xp5j2IHyTgs?si=9WrrlhixL6idjBwV'
+          thumb: 'https://i.ytimg.com/vi/7obFFUPv4Hs/hqdefault.jpg',
+          videoId: '7obFFUPv4Hs',
+          url: 'https://www.youtube.com/watch?v=7obFFUPv4Hs'
         },
         'kishore-kumar': {
           id: 'kishore-kumar',
-          title: 'Kishore Kumar Evergreen Hits',
-          singer: 'Kishore Kumar Melodies',
+          title: 'Kishore Kumar Evergreen Classics',
+          singer: 'Kishore Kumar · Saregama Official Audio Master',
           label: 'Kishore Kumar Hits',
-          thumb: 'https://i.ytimg.com/vi/ebw1zHtleFY/hqdefault.jpg',
-          videoId: 'ebw1zHtleFY',
-          url: 'https://youtu.be/ebw1zHtleFY?si=ouK2C_7dqxDqwqPe'
+          thumb: 'https://i.ytimg.com/vi/l3Q_zHd3kCA/hqdefault.jpg',
+          videoId: 'l3Q_zHd3kCA',
+          url: 'https://www.youtube.com/watch?v=l3Q_zHd3kCA'
         },
         'bollywood-90s-duets': {
           id: 'bollywood-90s-duets',
           title: '90s Bollywood Love Duets',
-          singer: 'Udit Narayan · Alka Yagnik · Kumar Sanu',
+          singer: 'Udit Narayan, Alka Yagnik, Kumar Sanu · Tips Official',
           label: '90s Love Duets',
-          thumb: 'https://i.ytimg.com/vi/9JJuXIi5YAU/hqdefault.jpg',
-          videoId: '9JJuXIi5YAU',
-          url: 'https://youtu.be/9JJuXIi5YAU?si=USNzGpuMVVDoaY-p'
+          thumb: 'https://i.ytimg.com/vi/PWyXe6fzsmM/hqdefault.jpg',
+          videoId: 'PWyXe6fzsmM',
+          url: 'https://www.youtube.com/watch?v=PWyXe6fzsmM'
         },
         'ankit-tiwari': {
           id: 'ankit-tiwari',
-          title: 'Best of Ankit Tiwari',
-          singer: 'Ankit Tiwari · Sunn Raha Hai Na',
+          title: 'Sunn Raha Hai Na Tu — Aashiqui 2',
+          singer: 'Ankit Tiwari · T-Series Official Audio Master',
           label: 'Best of Ankit Tiwari',
-          thumb: 'https://i.ytimg.com/vi/gFyZGsTR1FI/hqdefault.jpg',
-          videoId: 'gFyZGsTR1FI',
-          url: 'https://youtu.be/gFyZGsTR1FI?si=kEr48BcmY0Ti42vp'
+          thumb: 'https://i.ytimg.com/vi/tQL-gx7PeBc/hqdefault.jpg',
+          videoId: 'tQL-gx7PeBc',
+          url: 'https://www.youtube.com/watch?v=tQL-gx7PeBc'
         },
         'arijit-singh': {
           id: 'arijit-singh',
           title: 'Best of Arijit Singh',
-          singer: 'Arijit Singh · Soulful Romance Non-Stop',
+          singer: 'Arijit Singh · Zee Music Company Official Jukebox',
           label: 'Best of Arijit Singh',
           thumb: 'https://i.ytimg.com/vi/kXHiIxx2atA/hqdefault.jpg',
           videoId: 'kXHiIxx2atA',
@@ -3055,22 +3260,21 @@
         },
         'dil-ka-telephone': {
           id: 'dil-ka-telephone',
-          title: 'Dil Ka Telephone — YouTube Mix ☎️',
-          singer: 'Jonita Gandhi & Nakash Aziz · Meet Bros (Dream Girl)',
+          title: 'Dil Ka Telephone — Dream Girl ☎️',
+          singer: 'Jonita Gandhi & Nakash Aziz · Zee Music Company Official',
           label: 'Dil Ka Telephone Mix ☎️',
           thumb: 'https://i.ytimg.com/vi/a3B2glol4IU/hqdefault.jpg',
           videoId: 'a3B2glol4IU',
-          playlistId: 'RDa3B2glol4IU',
-          isPlaylist: true,
-          url: 'https://youtube.com/playlist?list=RDa3B2glol4IU&playnext=1&si=wJYIN6eQ3x_CVsOF'
+          url: 'https://www.youtube.com/watch?v=a3B2glol4IU'
         }
       };
 
       let activeMixtapeId = 'aashiqui-2';
+      let currentPlaybackMode = 'youtube'; // 'youtube' | 'hifi'
       let ytPlayer = null;
       let isPlaying = false;
       let pollTimer = null;
-      let audioCtx = null;
+      const hifiAudioPlayer = document.getElementById('hifiAudioPlayer');
 
       // DOM Elements
       const playerThumbImg = document.getElementById('playerThumbImg');
@@ -3123,7 +3327,40 @@
         }
       }
 
+      // HTML5 High-Fidelity Audio Event Handlers
+      if (hifiAudioPlayer) {
+        hifiAudioPlayer.addEventListener('timeupdate', () => {
+          if (currentPlaybackMode === 'hifi' && hifiAudioPlayer.duration > 0) {
+            if (playerScrubber && !playerScrubber.matches(':active')) {
+              playerScrubber.value = (hifiAudioPlayer.currentTime / hifiAudioPlayer.duration) * 100;
+            }
+            if (timeCurrent) timeCurrent.textContent = formatTime(hifiAudioPlayer.currentTime);
+            if (timeTotal) timeTotal.textContent = formatTime(hifiAudioPlayer.duration);
+          }
+        });
+        hifiAudioPlayer.addEventListener('play', () => {
+          if (currentPlaybackMode === 'hifi') updatePlayingVisuals(true);
+        });
+        hifiAudioPlayer.addEventListener('pause', () => {
+          if (currentPlaybackMode === 'hifi') updatePlayingVisuals(false);
+        });
+        hifiAudioPlayer.addEventListener('ended', () => {
+          if (currentPlaybackMode === 'hifi') {
+            const keys = Object.keys(MIXTAPES);
+            const nextIndex = (keys.indexOf(activeMixtapeId) + 1) % keys.length;
+            switchMixtape(keys[nextIndex]);
+          }
+        });
+        hifiAudioPlayer.addEventListener('error', (e) => {
+          console.warn('[HTML5 Audio Error]', e);
+          if (playerSubtitle) {
+            playerSubtitle.innerHTML = '<span style="color:#ff8585;">Audio load error. Falling back to stream...</span>';
+          }
+        });
+      }
+
       function syncCurrentVideoDetails() {
+        if (currentPlaybackMode === 'hifi') return;
         if (!ytPlayer || typeof ytPlayer.getVideoData !== 'function') return;
         try {
           const data = ytPlayer.getVideoData();
@@ -3150,6 +3387,7 @@
       function startPolling() {
         stopPolling();
         pollTimer = setInterval(() => {
+          if (currentPlaybackMode === 'hifi') return;
           if (!ytPlayer || typeof ytPlayer.getCurrentTime !== 'function') return;
           try {
             syncCurrentVideoDetails();
@@ -3208,43 +3446,76 @@
         if (playerSongTitle) playerSongTitle.textContent = tape.title;
         if (playerSubtitle) playerSubtitle.textContent = tape.singer;
         if (currentPlaylistLabel) currentPlaylistLabel.textContent = tape.label;
-        if (btnYtDirect) btnYtDirect.href = tape.url;
+        if (btnYtDirect) {
+          btnYtDirect.href = tape.url;
+          btnYtDirect.title = tape.isDirectAudio ? 'Direct Audio Master File' : 'Listen on YouTube ↗';
+        }
 
         // Reset Scrubber & Time
         if (playerScrubber) playerScrubber.value = 0;
         if (timeCurrent) timeCurrent.textContent = formatTime(seekSec || 0);
         if (timeTotal) timeTotal.textContent = '--:--';
 
-        // 4. Load into YouTube API (supports both single videos & YouTube playlists/mixes)
-        if (ytPlayer) {
-          if (tape.playlistId && typeof ytPlayer.loadPlaylist === 'function') {
-            try {
-              ytPlayer.loadPlaylist({
-                list: tape.playlistId,
-                listType: 'playlist',
-                index: 0,
-                suggestedQuality: 'hd720'
-              });
+        // 4. Route Playback: HTML5 High-Fidelity Audio vs YouTube Embed
+        if (tape.isDirectAudio) {
+          currentPlaybackMode = 'hifi';
+          // Pause YouTube if active
+          if (ytPlayer && typeof ytPlayer.pauseVideo === 'function') {
+            try { ytPlayer.pauseVideo(); } catch (e) {}
+          }
+          if (hifiAudioPlayer) {
+            hifiAudioPlayer.src = tape.audioUrl;
+            if (typeof seekSec === 'number' && seekSec > 0) {
+              hifiAudioPlayer.currentTime = seekSec;
+            }
+            const vol = playerVolSlider ? parseInt(playerVolSlider.value, 10) / 100 : 1;
+            hifiAudioPlayer.volume = vol;
+            if (window.resumeAudioContext) window.resumeAudioContext();
+            hifiAudioPlayer.play().then(() => {
               updatePlayingVisuals(true);
-            } catch (err) {
-              if (typeof ytPlayer.loadVideoById === 'function') {
-                ytPlayer.loadVideoById({
-                  videoId: tape.videoId,
+            }).catch(e => {
+              console.log('[Autoplay] User gesture required for playback');
+            });
+          }
+          if (window.updateEqSourceNotice) window.updateEqSourceNotice('hifi');
+        } else {
+          currentPlaybackMode = 'youtube';
+          // Pause HTML5 player if active
+          if (hifiAudioPlayer && !hifiAudioPlayer.paused) {
+            hifiAudioPlayer.pause();
+          }
+          if (window.updateEqSourceNotice) window.updateEqSourceNotice('youtube');
+
+          if (ytPlayer) {
+            if (tape.playlistId && typeof ytPlayer.loadPlaylist === 'function') {
+              try {
+                ytPlayer.loadPlaylist({
+                  list: tape.playlistId,
+                  listType: 'playlist',
+                  index: 0,
                   suggestedQuality: 'hd720'
                 });
                 updatePlayingVisuals(true);
+              } catch (err) {
+                if (typeof ytPlayer.loadVideoById === 'function') {
+                  ytPlayer.loadVideoById({
+                    videoId: tape.videoId,
+                    suggestedQuality: 'hd720'
+                  });
+                  updatePlayingVisuals(true);
+                }
               }
+            } else if (typeof ytPlayer.loadVideoById === 'function') {
+              const loadOptions = {
+                videoId: tape.videoId,
+                suggestedQuality: 'hd720'
+              };
+              if (typeof seekSec === 'number' && seekSec > 0) {
+                loadOptions.startSeconds = seekSec;
+              }
+              ytPlayer.loadVideoById(loadOptions);
+              updatePlayingVisuals(true);
             }
-          } else if (typeof ytPlayer.loadVideoById === 'function') {
-            const loadOptions = {
-              videoId: tape.videoId,
-              suggestedQuality: 'hd720'
-            };
-            if (typeof seekSec === 'number' && seekSec > 0) {
-              loadOptions.startSeconds = seekSec;
-            }
-            ytPlayer.loadVideoById(loadOptions);
-            updatePlayingVisuals(true);
           }
         }
 
@@ -3281,10 +3552,16 @@
         item.addEventListener('click', () => {
           const tapeKey = item.dataset.mixtapeJump;
           const seekSec = parseFloat(item.dataset.seekSeconds || 0);
-          if (tapeKey === activeMixtapeId && ytPlayer && typeof ytPlayer.seekTo === 'function') {
-            ytPlayer.seekTo(seekSec, true);
-            ytPlayer.playVideo();
-            updatePlayingVisuals(true);
+          if (tapeKey === activeMixtapeId) {
+            if (currentPlaybackMode === 'hifi' && hifiAudioPlayer) {
+              hifiAudioPlayer.currentTime = seekSec;
+              hifiAudioPlayer.play();
+              updatePlayingVisuals(true);
+            } else if (ytPlayer && typeof ytPlayer.seekTo === 'function') {
+              ytPlayer.seekTo(seekSec, true);
+              ytPlayer.playVideo();
+              updatePlayingVisuals(true);
+            }
           } else {
             switchMixtape(tapeKey, seekSec);
           }
@@ -3324,55 +3601,51 @@
       /* --- 3. YOUTUBE IFRAME API INITIALIZATION --- */
       window.onYouTubeIframeAPIReady = function () {
         try {
+          const initialTape = MIXTAPES[activeMixtapeId];
+          const initialVid = initialTape && initialTape.videoId ? initialTape.videoId : 'Umqb9KENgmk';
+
           ytPlayer = new YT.Player('yt-hidden-player', {
-            height: '360',
-            width: '640',
-            videoId: MIXTAPES[activeMixtapeId].videoId,
+            height: '160',
+            width: '240',
+            videoId: initialVid,
             playerVars: {
               autoplay: 0,
               controls: 0,
               modestbranding: 1,
               rel: 0,
               playsinline: 1,
+              enablejsapi: 1,
               origin: window.location.origin
             },
             events: {
               onReady: function (event) {
                 const vol = playerVolSlider ? parseInt(playerVolSlider.value, 10) : 100;
                 event.target.setVolume(vol);
-                if (typeof event.target.setPlaybackQuality === 'function') {
-                  event.target.setPlaybackQuality('hd720');
-                }
               },
               onStateChange: function (event) {
+                if (currentPlaybackMode !== 'youtube') return;
                 if (event.data === 1) { // PLAYING
                   updatePlayingVisuals(true);
                   syncCurrentVideoDetails();
-                  if (typeof event.target.setPlaybackQuality === 'function') {
-                    event.target.setPlaybackQuality('hd720');
-                  }
                 } else if (event.data === 2 || event.data === 0) { // PAUSED or ENDED
                   updatePlayingVisuals(false);
                 }
               },
               onError: function (event) {
                 const tape = MIXTAPES[activeMixtapeId];
-                console.warn('[YouTube Player] Playback event error', event?.data, tape?.title);
-                // Graceful fallback: If YouTube Mix / Playlist fails to embed in iframe, fall back to playing seed video
-                if (tape && tape.playlistId && ytPlayer && typeof ytPlayer.loadVideoById === 'function') {
-                  try {
-                    ytPlayer.loadVideoById({ videoId: tape.videoId });
-                    return;
-                  } catch (e) {}
-                }
+                console.warn('[YouTube Player Error]', event?.data, tape?.title);
+                let helpfulNotice = 'Playback restricted by copyright holder on external domains.';
+                if (event.data === 100) helpfulNotice = 'Video removed or marked private.';
+                else if (event.data === 101 || event.data === 150) helpfulNotice = 'Embedding disabled by music owner.';
+
                 if (playerSubtitle && tape) {
-                  playerSubtitle.innerHTML = `<span style="color:var(--amber-gold);">${tape.label}</span> · <a href="${tape.url}" target="_blank" rel="noopener noreferrer" style="color:var(--amber-gold); text-decoration:underline;">Listen on YouTube ↗</a>`;
+                  playerSubtitle.innerHTML = `<span style="color:#ff8585;">⚠️ ${helpfulNotice}</span> · <a href="${tape.url}" target="_blank" rel="noopener noreferrer" style="color:var(--amber-gold); text-decoration:underline; font-weight:700;">Open on YouTube ↗</a>`;
                 }
               }
             }
           });
         } catch (e) {
-          console.warn('YouTube Player API fallback initialization', e);
+          console.warn('[YouTube Player] API initialization fallback:', e);
         }
       };
 
@@ -3381,8 +3654,22 @@
       const firstScript = document.getElementsByTagName('script')[0];
       firstScript.parentNode.insertBefore(tag, firstScript);
 
-      // Play / Pause Toggle
+      // Unified Play / Pause Toggle
       function togglePlayPause() {
+        if (window.resumeAudioContext) window.resumeAudioContext();
+
+        if (currentPlaybackMode === 'hifi') {
+          if (!hifiAudioPlayer) return;
+          if (hifiAudioPlayer.paused) {
+            hifiAudioPlayer.play().then(() => updatePlayingVisuals(true)).catch(e => console.log(e));
+          } else {
+            hifiAudioPlayer.pause();
+            updatePlayingVisuals(false);
+          }
+          return;
+        }
+
+        // YouTube player
         if (!ytPlayer || typeof ytPlayer.getPlayerState !== 'function') {
           updatePlayingVisuals(!isPlaying);
           return;
@@ -3404,6 +3691,17 @@
       // Prev: Rewind 15 seconds or cycle to previous mixtape / playlist track
       if (btnPrev) {
         btnPrev.addEventListener('click', () => {
+          if (currentPlaybackMode === 'hifi' && hifiAudioPlayer) {
+            if (hifiAudioPlayer.currentTime > 15) {
+              hifiAudioPlayer.currentTime -= 15;
+            } else {
+              const keys = Object.keys(MIXTAPES);
+              const prevIndex = (keys.indexOf(activeMixtapeId) - 1 + keys.length) % keys.length;
+              switchMixtape(keys[prevIndex]);
+            }
+            return;
+          }
+
           const tape = MIXTAPES[activeMixtapeId];
           if (ytPlayer && typeof ytPlayer.getCurrentTime === 'function') {
             const cur = ytPlayer.getCurrentTime();
@@ -3429,6 +3727,13 @@
       // Next: Skip to next video in playlist or cycle to next mixtape
       if (btnNext) {
         btnNext.addEventListener('click', () => {
+          if (currentPlaybackMode === 'hifi') {
+            const keys = Object.keys(MIXTAPES);
+            const nextIndex = (keys.indexOf(activeMixtapeId) + 1) % keys.length;
+            switchMixtape(keys[nextIndex]);
+            return;
+          }
+
           const tape = MIXTAPES[activeMixtapeId];
           if (tape && tape.playlistId && typeof ytPlayer.nextVideo === 'function') {
             try {
@@ -3454,27 +3759,40 @@
       // Scrubber Seek
       if (playerScrubber) {
         playerScrubber.addEventListener('input', (e) => {
+          const ratio = e.target.value / 100;
+          if (currentPlaybackMode === 'hifi' && hifiAudioPlayer && hifiAudioPlayer.duration > 0) {
+            const sec = ratio * hifiAudioPlayer.duration;
+            if (timeCurrent) timeCurrent.textContent = formatTime(sec);
+            return;
+          }
           if (!ytPlayer || typeof ytPlayer.getDuration !== 'function') return;
           const dur = ytPlayer.getDuration();
           if (dur > 0) {
-            const sec = (e.target.value / 100) * dur;
+            const sec = ratio * dur;
             if (timeCurrent) timeCurrent.textContent = formatTime(sec);
           }
         });
         playerScrubber.addEventListener('change', (e) => {
+          const ratio = e.target.value / 100;
+          if (currentPlaybackMode === 'hifi' && hifiAudioPlayer && hifiAudioPlayer.duration > 0) {
+            hifiAudioPlayer.currentTime = ratio * hifiAudioPlayer.duration;
+            return;
+          }
           if (!ytPlayer || typeof ytPlayer.getDuration !== 'function') return;
           const dur = ytPlayer.getDuration();
           if (dur > 0) {
-            const sec = (e.target.value / 100) * dur;
-            ytPlayer.seekTo(sec, true);
+            ytPlayer.seekTo(ratio * dur, true);
           }
         });
       }
 
-      // Volume & Mute
+      // Unified Volume & Mute Controls
       if (playerVolSlider) {
         playerVolSlider.addEventListener('input', (e) => {
           const val = parseInt(e.target.value, 10);
+          if (hifiAudioPlayer) {
+            hifiAudioPlayer.volume = val / 100;
+          }
           if (ytPlayer && typeof ytPlayer.setVolume === 'function') {
             ytPlayer.setVolume(val);
             if (val === 0 && ytPlayer.mute) ytPlayer.mute();
@@ -3494,15 +3812,16 @@
 
       if (btnMute) {
         btnMute.addEventListener('click', () => {
-          if (!ytPlayer || typeof ytPlayer.isMuted !== 'function') return;
-          const isMuted = ytPlayer.isMuted();
-          if (isMuted) {
-            ytPlayer.unMute();
+          const isMutedNow = (currentPlaybackMode === 'hifi') ? hifiAudioPlayer?.muted : ytPlayer?.isMuted?.();
+          if (isMutedNow) {
+            if (hifiAudioPlayer) hifiAudioPlayer.muted = false;
+            if (ytPlayer && typeof ytPlayer.unMute === 'function') ytPlayer.unMute();
             if (iconVolHigh) iconVolHigh.style.display = 'block';
             if (iconVolMuted) iconVolMuted.style.display = 'none';
-            if (playerVolSlider) playerVolSlider.value = ytPlayer.getVolume() || 100;
+            if (playerVolSlider) playerVolSlider.value = (currentPlaybackMode === 'hifi') ? Math.round((hifiAudioPlayer.volume || 1) * 100) : (ytPlayer?.getVolume?.() || 100);
           } else {
-            ytPlayer.mute();
+            if (hifiAudioPlayer) hifiAudioPlayer.muted = true;
+            if (ytPlayer && typeof ytPlayer.mute === 'function') ytPlayer.mute();
             if (iconVolHigh) iconVolHigh.style.display = 'none';
             if (iconVolMuted) iconVolMuted.style.display = 'block';
             if (playerVolSlider) playerVolSlider.value = 0;
@@ -3863,46 +4182,230 @@
         const playerEqDrawer = document.getElementById('playerEqDrawer');
         const eqSlidersContainer = document.getElementById('eqSlidersContainer');
         const btnEqReset = document.getElementById('btnEqReset');
+        const eqToggleSwitch = document.getElementById('eqToggleSwitch');
+        const eqToggleText = document.getElementById('eqToggleText');
         const presetButtons = document.querySelectorAll('.btn-eq-preset');
+        const eqBassSlider = document.getElementById('eqBassSlider');
+        const eqTrebleSlider = document.getElementById('eqTrebleSlider');
+        const eqBassVal = document.getElementById('eqBassVal');
+        const eqTrebleVal = document.getElementById('eqTrebleVal');
         const vuFillL = document.getElementById('vuFillL');
         const vuFillR = document.getElementById('vuFillR');
         const vuValL = document.getElementById('vuValL');
         const vuValR = document.getElementById('vuValR');
 
-        // 10 Standard Hi-Fi Equalizer Frequency Bands
+        // 10 Requested Standard Equalizer Bands: 31 Hz, 62 Hz, 125 Hz, 250 Hz, 500 Hz, 1 kHz, 2 kHz, 4 kHz, 8 kHz, 16 kHz
         const BANDS = [
-          { key: '32', label: '32', full: '32Hz', centerHz: 32, factor: 1.15 },
-          { key: '64', label: '64', full: '64Hz', centerHz: 64, factor: 1.25 },
-          { key: '125', label: '125', full: '125Hz', centerHz: 125, factor: 1.2 },
-          { key: '250', label: '250', full: '250Hz', centerHz: 250, factor: 1.05 },
-          { key: '500', label: '500', full: '500Hz', centerHz: 500, factor: 1.0 },
-          { key: '1k', label: '1k', full: '1kHz', centerHz: 1000, factor: 1.08 },
-          { key: '2k', label: '2k', full: '2kHz', centerHz: 2000, factor: 1.12 },
-          { key: '4k', label: '4k', full: '4kHz', centerHz: 4000, factor: 1.05 },
-          { key: '8k', label: '8k', full: '8kHz', centerHz: 8000, factor: 1.18 },
-          { key: '16k', label: '16k', full: '16kHz', centerHz: 16000, factor: 1.22 }
+          { key: '31', label: '31', full: '31 Hz', centerHz: 31, factor: 1.15, binLow: 0, binHigh: 1 },
+          { key: '62', label: '62', full: '62 Hz', centerHz: 62, factor: 1.25, binLow: 1, binHigh: 2 },
+          { key: '125', label: '125', full: '125 Hz', centerHz: 125, factor: 1.2, binLow: 2, binHigh: 4 },
+          { key: '250', label: '250', full: '250 Hz', centerHz: 250, factor: 1.05, binLow: 4, binHigh: 7 },
+          { key: '500', label: '500', full: '500 Hz', centerHz: 500, factor: 1.0, binLow: 7, binHigh: 14 },
+          { key: '1k', label: '1k', full: '1 kHz', centerHz: 1000, factor: 1.08, binLow: 14, binHigh: 26 },
+          { key: '2k', label: '2k', full: '2 kHz', centerHz: 2000, factor: 1.12, binLow: 26, binHigh: 50 },
+          { key: '4k', label: '4k', full: '4 kHz', centerHz: 4000, factor: 1.05, binLow: 50, binHigh: 96 },
+          { key: '8k', label: '8k', full: '8 kHz', centerHz: 8000, factor: 1.18, binLow: 96, binHigh: 180 },
+          { key: '16k', label: '16k', full: '16 kHz', centerHz: 16000, factor: 1.22, binLow: 180, binHigh: 255 }
         ];
 
-        // Tape Bias & Acoustic Tone Presets (Gains in dB for each of the 10 bands)
+        // Requested Presets: Flat, Classic Bollywood, Bass Boost, Vocal Clarity, Warm Retro, Acoustic, Rock
         const PRESETS = {
-          normal: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-          chrome: [2, 1, 0, 0, 0, 1, 2, 3, 4, 4],
-          metal: [5, 4, 2, 0, -1, 1, 3, 4, 5, 6],
-          vocal: [-2, -1, 0, 2, 4, 5, 4, 2, 1, 0],
-          bass: [7, 8, 5, 2, 0, -1, -1, 0, 1, 1]
+          'flat': {
+            gains: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            bass: 0,
+            treble: 0
+          },
+          'classic-bollywood': {
+            gains: [2, 3, 1, 0, 1, 2.5, 3.5, 2, 1, 1.5],
+            bass: 2.0,
+            treble: 1.5
+          },
+          'bass-boost': {
+            gains: [7, 8, 5, 2, 0, 0, 0, 0, 0, 0],
+            bass: 6.0,
+            treble: 0.0
+          },
+          'vocal-clarity': {
+            gains: [-2, -2, 0, 1, 2, 4.5, 4, 2, 0, -1],
+            bass: -1.5,
+            treble: 2.5
+          },
+          'warm-retro': {
+            gains: [3, 4.5, 3, 1, 0, 0, 0, -1.5, -3.5, -5],
+            bass: 3.0,
+            treble: -2.5
+          },
+          'acoustic': {
+            gains: [2, 3, 1, 0, 1, 2, 3, 2.5, 1.5, 1],
+            bass: 1.5,
+            treble: 2.0
+          },
+          'rock': {
+            gains: [5, 4, 2, -1, -2, 1, 3, 4, 5, 5],
+            bass: 3.5,
+            treble: 3.5
+          }
         };
 
-        // State per band: current level (0..1), peak hold level (0..1), peak timer, slider gain (dB)
+        // State per band & master tone
         const bandGains = new Float32Array(10); // in dB (-12 .. +12)
         const bandLevels = new Float32Array(10); // current rendered level (0..1)
         const bandPeaks = new Float32Array(10); // floating peak hold (0..1)
         const peakHoldExpiry = new Float64Array(10); // timestamp when peak starts falling
+        let currentBassGain = 0; // dB
+        let currentTrebleGain = 0; // dB
+        let eqBypassed = false;
+        let activePresetKey = 'flat';
 
         let sliderElements = [];
         let vuLeftLevel = 0;
         let vuRightLevel = 0;
         let animFrameId = null;
         let lastTimestamp = performance.now();
+
+        /* --- WEB AUDIO API GRAPH (Hardware BiquadFilterNodes & AnalyserNode) --- */
+        let webAudioCtx = null;
+        let mediaSourceNode = null;
+        let biquadFilters = [];
+        let bassFilterNode = null;
+        let trebleFilterNode = null;
+        let limiterCompressor = null;
+        let analyserNode = null;
+        let masterDspGain = null;
+        let isAudioEngineInitialized = false;
+
+        function initWebAudioDsp() {
+          if (isAudioEngineInitialized) return;
+          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+          if (!AudioContextClass) return;
+
+          try {
+            webAudioCtx = new AudioContextClass();
+
+            // 1. Bass Low-Shelf Filter (~150 Hz)
+            bassFilterNode = webAudioCtx.createBiquadFilter();
+            bassFilterNode.type = 'lowshelf';
+            bassFilterNode.frequency.value = 150;
+            bassFilterNode.gain.value = eqBypassed ? 0 : currentBassGain;
+
+            // 2. 10-Band Peaking Graphic EQ Filters (Q = 1.414 for musical bandwidth)
+            biquadFilters = BANDS.map((band, idx) => {
+              const filter = webAudioCtx.createBiquadFilter();
+              filter.type = 'peaking';
+              filter.frequency.value = band.centerHz;
+              filter.Q.value = 1.414;
+              filter.gain.value = eqBypassed ? 0 : bandGains[idx];
+              return filter;
+            });
+
+            // 3. Treble High-Shelf Filter (~6000 Hz)
+            trebleFilterNode = webAudioCtx.createBiquadFilter();
+            trebleFilterNode.type = 'highshelf';
+            trebleFilterNode.frequency.value = 6000;
+            trebleFilterNode.gain.value = eqBypassed ? 0 : currentTrebleGain;
+
+            // 4. Soft Limiter (DynamicsCompressorNode to prevent digital clipping)
+            limiterCompressor = webAudioCtx.createDynamicsCompressor();
+            limiterCompressor.threshold.value = -2.0;
+            limiterCompressor.knee.value = 6.0;
+            limiterCompressor.ratio.value = 12.0;
+            limiterCompressor.attack.value = 0.003;
+            limiterCompressor.release.value = 0.25;
+
+            // 5. High-Resolution AnalyserNode for Real-Time Live Frequency FFT Analysis
+            analyserNode = webAudioCtx.createAnalyser();
+            analyserNode.fftSize = 512;
+            analyserNode.smoothingTimeConstant = 0.82;
+
+            // 6. Master DSP Gain (safe headroom)
+            masterDspGain = webAudioCtx.createGain();
+            masterDspGain.gain.value = 0.88;
+
+            // 7. Single MediaElementAudioSourceNode creation to prevent InvalidStateError
+            if (hifiAudioPlayer && !mediaSourceNode) {
+              mediaSourceNode = webAudioCtx.createMediaElementSource(hifiAudioPlayer);
+            }
+
+            if (mediaSourceNode) {
+              let chain = mediaSourceNode;
+              chain.connect(bassFilterNode);
+              chain = bassFilterNode;
+
+              for (let i = 0; i < biquadFilters.length; i++) {
+                chain.connect(biquadFilters[i]);
+                chain = biquadFilters[i];
+              }
+
+              chain.connect(trebleFilterNode);
+              trebleFilterNode.connect(masterDspGain);
+              masterDspGain.connect(limiterCompressor);
+              limiterCompressor.connect(analyserNode);
+              analyserNode.connect(webAudioCtx.destination);
+            }
+
+            isAudioEngineInitialized = true;
+          } catch (err) {
+            console.warn('[Web Audio API Initialization Error]', err);
+          }
+        }
+
+        window.resumeAudioContext = function() {
+          if (!isAudioEngineInitialized) initWebAudioDsp();
+          if (webAudioCtx && webAudioCtx.state === 'suspended') {
+            webAudioCtx.resume().catch(e => console.log(e));
+          }
+        };
+
+        function updateWebAudioParams() {
+          if (!isAudioEngineInitialized) return;
+          const now = webAudioCtx.currentTime;
+          if (bassFilterNode) {
+            bassFilterNode.gain.setTargetAtTime(eqBypassed ? 0 : currentBassGain, now, 0.02);
+          }
+          if (trebleFilterNode) {
+            trebleFilterNode.gain.setTargetAtTime(eqBypassed ? 0 : currentTrebleGain, now, 0.02);
+          }
+          for (let i = 0; i < biquadFilters.length; i++) {
+            if (biquadFilters[i]) {
+              biquadFilters[i].gain.setTargetAtTime(eqBypassed ? 0 : bandGains[i], now, 0.02);
+            }
+          }
+        }
+
+        /* --- LOCAL STORAGE PREFERENCES --- */
+        const STORAGE_KEY = 'cassette_wala_eq_prefs_v3';
+
+        function savePreferences() {
+          try {
+            const data = {
+              preset: activePresetKey,
+              gains: Array.from(bandGains),
+              bass: currentBassGain,
+              treble: currentTrebleGain,
+              enabled: !eqBypassed
+            };
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+          } catch (e) {}
+        }
+
+        function loadPreferences() {
+          try {
+            const raw = localStorage.getItem(STORAGE_KEY);
+            if (!raw) return false;
+            const data = JSON.parse(raw);
+            if (data && Array.isArray(data.gains) && data.gains.length === 10) {
+              data.gains.forEach((g, idx) => {
+                bandGains[idx] = typeof g === 'number' ? g : 0;
+              });
+              currentBassGain = typeof data.bass === 'number' ? data.bass : 0;
+              currentTrebleGain = typeof data.treble === 'number' ? data.treble : 0;
+              eqBypassed = data.enabled === false;
+              activePresetKey = data.preset || 'custom';
+              return true;
+            }
+          } catch (e) {}
+          return false;
+        }
 
         // 1. Build interactive 10-Band Slider Controls
         if (eqSlidersContainer) {
@@ -3912,7 +4415,7 @@
             col.className = 'eq-slider-col';
             col.innerHTML = `
               <span class="eq-slider-val" id="eqVal_${idx}">0dB</span>
-              <input type="range" class="eq-slider-input" id="eqInput_${idx}" min="-12" max="12" step="1" value="0" aria-label="${band.full} gain">
+              <input type="range" class="eq-slider-input" id="eqInput_${idx}" min="-12" max="12" step="0.5" value="0" aria-label="${band.full} gain">
               <span class="eq-slider-label">${band.label}</span>
             `;
 
@@ -3920,12 +4423,14 @@
             const valSpan = col.querySelector('.eq-slider-val');
 
             input.addEventListener('input', (e) => {
-              const val = parseInt(e.target.value, 10);
+              const val = parseFloat(e.target.value);
               bandGains[idx] = val;
-              valSpan.textContent = `${val > 0 ? '+' : ''}${val}dB`;
+              valSpan.textContent = `${val > 0 ? '+' : ''}${val.toFixed(1)}dB`;
               valSpan.style.color = val === 0 ? 'var(--text-dim)' : 'var(--amber-gold)';
-              // Deselect preset buttons when user customizes
               presetButtons.forEach(b => b.classList.remove('active'));
+              activePresetKey = 'custom';
+              updateWebAudioParams();
+              savePreferences();
             });
 
             sliderElements.push({ input, valSpan });
@@ -3933,20 +4438,52 @@
           });
         }
 
-        // Apply a preset to all 10 bands
-        function applyPreset(name) {
-          const presetGains = PRESETS[name] || PRESETS.normal;
-          presetGains.forEach((gain, idx) => {
-            bandGains[idx] = gain;
+        function syncUiValues() {
+          // Sync 10-band sliders
+          bandGains.forEach((gain, idx) => {
             if (sliderElements[idx]) {
               sliderElements[idx].input.value = gain;
-              sliderElements[idx].valSpan.textContent = `${gain > 0 ? '+' : ''}${gain}dB`;
+              sliderElements[idx].valSpan.textContent = `${gain > 0 ? '+' : ''}${gain.toFixed(1)}dB`;
               sliderElements[idx].valSpan.style.color = gain === 0 ? 'var(--text-dim)' : 'var(--amber-gold)';
             }
           });
+
+          // Sync Bass & Treble sliders
+          if (eqBassSlider) eqBassSlider.value = currentBassGain;
+          if (eqBassVal) {
+            eqBassVal.textContent = `${currentBassGain > 0 ? '+' : ''}${currentBassGain.toFixed(1)} dB`;
+            eqBassVal.style.color = currentBassGain === 0 ? 'var(--text-dim)' : 'var(--amber-gold)';
+          }
+          if (eqTrebleSlider) eqTrebleSlider.value = currentTrebleGain;
+          if (eqTrebleVal) {
+            eqTrebleVal.textContent = `${currentTrebleGain > 0 ? '+' : ''}${currentTrebleGain.toFixed(1)} dB`;
+            eqTrebleVal.style.color = currentTrebleGain === 0 ? 'var(--text-dim)' : 'var(--amber-gold)';
+          }
+
+          // Sync Toggle switch
+          if (eqToggleSwitch) eqToggleSwitch.checked = !eqBypassed;
+          if (eqToggleText) eqToggleText.textContent = eqBypassed ? 'EQ BYPASS' : 'EQ ON';
+
+          // Sync Preset Buttons
           presetButtons.forEach(btn => {
-            btn.classList.toggle('active', btn.dataset.preset === name);
+            btn.classList.toggle('active', btn.dataset.preset === activePresetKey);
           });
+
+          updateWebAudioParams();
+        }
+
+        // Apply a preset to all 10 bands and master tones
+        function applyPreset(name) {
+          const presetObj = PRESETS[name] || PRESETS.flat;
+          activePresetKey = name;
+          presetObj.gains.forEach((gain, idx) => {
+            bandGains[idx] = gain;
+          });
+          currentBassGain = presetObj.bass || 0;
+          currentTrebleGain = presetObj.treble || 0;
+
+          syncUiValues();
+          savePreferences();
         }
 
         presetButtons.forEach(btn => {
@@ -3955,11 +4492,80 @@
           });
         });
 
-        if (btnEqReset) {
-          btnEqReset.addEventListener('click', () => {
-            applyPreset('normal');
+        // Bass & Treble Sliders
+        if (eqBassSlider) {
+          eqBassSlider.addEventListener('input', (e) => {
+            currentBassGain = parseFloat(e.target.value);
+            if (eqBassVal) {
+              eqBassVal.textContent = `${currentBassGain > 0 ? '+' : ''}${currentBassGain.toFixed(1)} dB`;
+              eqBassVal.style.color = currentBassGain === 0 ? 'var(--text-dim)' : 'var(--amber-gold)';
+            }
+            presetButtons.forEach(b => b.classList.remove('active'));
+            activePresetKey = 'custom';
+            updateWebAudioParams();
+            savePreferences();
           });
         }
+
+        if (eqTrebleSlider) {
+          eqTrebleSlider.addEventListener('input', (e) => {
+            currentTrebleGain = parseFloat(e.target.value);
+            if (eqTrebleVal) {
+              eqTrebleVal.textContent = `${currentTrebleGain > 0 ? '+' : ''}${currentTrebleGain.toFixed(1)} dB`;
+              eqTrebleVal.style.color = currentTrebleGain === 0 ? 'var(--text-dim)' : 'var(--amber-gold)';
+            }
+            presetButtons.forEach(b => b.classList.remove('active'));
+            activePresetKey = 'custom';
+            updateWebAudioParams();
+            savePreferences();
+          });
+        }
+
+        // Reset Button
+        if (btnEqReset) {
+          btnEqReset.addEventListener('click', () => {
+            applyPreset('flat');
+          });
+        }
+
+        // Enable / Disable Bypass Switch
+        if (eqToggleSwitch) {
+          eqToggleSwitch.addEventListener('change', (e) => {
+            eqBypassed = !e.target.checked;
+            if (eqToggleText) {
+              eqToggleText.textContent = eqBypassed ? 'EQ BYPASS' : 'EQ ON';
+            }
+            updateWebAudioParams();
+            savePreferences();
+          });
+        }
+
+        // Restore saved settings or apply default Flat
+        if (!loadPreferences()) {
+          applyPreset('flat');
+        } else {
+          syncUiValues();
+        }
+
+        // Live Audio Source Status Notice
+        window.updateEqSourceNotice = function(mode) {
+          const label = document.getElementById('eqSourceLabel');
+          const desc = document.getElementById('eqSourceDesc');
+          const pill = document.getElementById('eqSourcePill');
+          const livePillText = document.getElementById('eqLivePillText');
+
+          if (mode === 'hifi') {
+            if (label) label.textContent = 'Web Audio API 10-Band Biquad DSP Active';
+            if (desc) desc.textContent = 'Direct HTML5 lossless stereo audio. Filtered in real time by 10 hardware BiquadFilterNodes, stereo shelves, soft limiter, and live FFT AnalyserNode.';
+            if (pill) pill.style.borderColor = '#10b981';
+            if (livePillText) livePillText.textContent = 'Live Hardware FFT';
+          } else {
+            if (label) label.textContent = 'YouTube Official Master (CORS Protected)';
+            if (desc) desc.textContent = 'Official studio stream inside secure iframe. Browser security restricts direct PCM extraction. Real-time visualizer uses high-precision time-synced tempo fallback.';
+            if (pill) pill.style.borderColor = 'rgba(245, 179, 53, 0.45)';
+            if (livePillText) livePillText.textContent = 'Tempo-Synced FFT';
+          }
+        };
 
         // 2. Drawer Toggle / Close Interactions
         function toggleDrawer(open) {
@@ -4024,18 +4630,27 @@
         const dockCtxData = setupCanvas(dockCanvas, 84, 22);
         const drawerCtxData = setupCanvas(drawerCanvas, 460, 95);
 
-        // 4. Real-Time Audio Frequency Modeling & Animation Loop
+        // FFT Buffer for live Web Audio API analysis
+        let freqByteData = null;
+
+        // 4. Real-Time Audio Frequency Analysis & Animation Loop
         function animateEqualizer(timestamp) {
           const dt = Math.min(0.06, (timestamp - lastTimestamp) / 1000);
           lastTimestamp = timestamp;
 
-          // Obtain playback time and volume
-          let currentTime = 0;
           let masterVol = 1.0;
           if (playerVolSlider) {
             masterVol = Math.max(0, Math.min(1, parseInt(playerVolSlider.value, 10) / 100));
           }
-          if (ytPlayer) {
+
+          let currentTime = 0;
+          const isHifi = (currentPlaybackMode === 'hifi');
+
+          if (isHifi) {
+            if (hifiAudioPlayer) {
+              currentTime = hifiAudioPlayer.currentTime || 0;
+            }
+          } else if (ytPlayer) {
             if (typeof ytPlayer.isMuted === 'function' && ytPlayer.isMuted()) {
               masterVol = 0;
             }
@@ -4049,73 +4664,100 @@
           const timeSec = currentTime > 0 ? currentTime : timestamp / 1000;
           const playing = isPlaying && masterVol > 0.01;
 
-          // Audio rhythm parameters modeling Bollywood melody & percussion
-          const bpm = 96; // Average romantic groove tempo
+          // Check if genuine Web Audio API FFT analysis is available
+          let hasLiveFft = false;
+          if (isHifi && analyserNode && playing) {
+            if (!freqByteData || freqByteData.length !== analyserNode.frequencyBinCount) {
+              freqByteData = new Uint8Array(analyserNode.frequencyBinCount);
+            }
+            analyserNode.getByteFrequencyData(freqByteData);
+            hasLiveFft = true;
+          }
+
+          // Rhythm parameters for tempo-synced fallback
+          const bpm = 96;
           const beatPhase = (timeSec * (bpm / 60) * Math.PI * 2);
           const kickEnvelope = Math.max(0, Math.sin(beatPhase)) ** 3.5;
           const snareEnvelope = Math.max(0, Math.sin(beatPhase + Math.PI)) ** 3;
           const vocalSwell = 0.5 + 0.5 * Math.sin(timeSec * 2.3 + Math.cos(timeSec * 0.7));
           const melodyFlutter = 0.5 + 0.5 * Math.sin(timeSec * 5.8 + 1.2);
 
-          // Calculate target response for each band
+          // Calculate target response for each of the 10 bands
           for (let i = 0; i < 10; i++) {
             let targetEnergy = 0;
+
             if (playing) {
               const band = BANDS[i];
-              // Frequency acoustic modeling:
-              if (i === 0) {
-                // 32Hz Sub-bass: Deep kick thump & tape rumble
-                targetEnergy = (0.28 + 0.65 * kickEnvelope + 0.15 * Math.sin(timeSec * 1.5)) * masterVol;
-              } else if (i === 1) {
-                // 64Hz Bass: Main kick drum + bassline notes
-                targetEnergy = (0.35 + 0.58 * kickEnvelope + 0.22 * Math.sin(timeSec * 3.1)) * masterVol;
-              } else if (i === 2) {
-                // 125Hz Dholak / Tabla Bayan: Warm acoustic bass punch
-                targetEnergy = (0.32 + 0.45 * kickEnvelope + 0.3 * snareEnvelope + 0.15 * Math.cos(timeSec * 4.2)) * masterVol;
-              } else if (i === 3) {
-                // 250Hz Warmth: Lower harmonic guitar & sarangi body
-                targetEnergy = (0.3 + 0.35 * vocalSwell + 0.25 * snareEnvelope + 0.15 * Math.sin(timeSec * 6.0)) * masterVol;
-              } else if (i === 4) {
-                // 500Hz Body: Male/Female chest resonance & acoustic piano
-                targetEnergy = (0.38 + 0.48 * vocalSwell + 0.2 * melodyFlutter) * masterVol;
-              } else if (i === 5) {
-                // 1kHz Vocal Lead: Emotional vocal delivery & harmonium
-                targetEnergy = (0.42 + 0.52 * vocalSwell + 0.25 * melodyFlutter + 0.1 * Math.sin(timeSec * 8.4)) * masterVol;
-              } else if (i === 6) {
-                // 2kHz Presence: Sitar, flute clarity, vocal bite
-                targetEnergy = (0.38 + 0.45 * melodyFlutter + 0.25 * vocalSwell + 0.15 * snareEnvelope) * masterVol;
-              } else if (i === 7) {
-                // 4kHz Clarity: Percussion attack, tambourine & ghungroo
-                targetEnergy = (0.32 + 0.48 * snareEnvelope + 0.25 * Math.sin(timeSec * 11.2) ** 2) * masterVol;
-              } else if (i === 8) {
-                // 8kHz Sparkle: Shakers, cymbals, strings shimmer
-                targetEnergy = (0.28 + 0.42 * snareEnvelope + 0.28 * (Math.sin(timeSec * 14.5) * 0.5 + 0.5)) * masterVol;
-              } else {
-                // 16kHz Tape Air: High-end cassette sheen & analog atmosphere
-                targetEnergy = (0.25 + 0.35 * (Math.sin(timeSec * 18.2) * 0.5 + 0.5) + 0.2 * Math.random()) * masterVol;
-              }
 
-              // Apply User EQ Gain Modifier (dB converted to linear multiplier: -12dB -> ~0.35x, +12dB -> ~2.1x)
-              const gainFactor = Math.pow(10, bandGains[i] / 24);
-              targetEnergy = Math.max(0.04, Math.min(1.0, targetEnergy * gainFactor * band.factor));
+              if (hasLiveFft && freqByteData) {
+                // 100% Genuine Web Audio FFT Analysis
+                let sum = 0;
+                let count = 0;
+                for (let b = band.binLow; b <= band.binHigh && b < freqByteData.length; b++) {
+                  sum += freqByteData[b];
+                  count++;
+                }
+                const rawLevel = count > 0 ? (sum / count) / 255 : 0;
+                targetEnergy = Math.max(0.04, Math.min(1.0, rawLevel * 1.55 * masterVol));
+              } else {
+                // High-precision acoustic modeling fallback synchronized to song playback time
+                if (i === 0) {
+                  // 31Hz Sub-bass
+                  targetEnergy = (0.28 + 0.65 * kickEnvelope + 0.15 * Math.sin(timeSec * 1.5)) * masterVol;
+                } else if (i === 1) {
+                  // 62Hz Bass
+                  targetEnergy = (0.35 + 0.58 * kickEnvelope + 0.22 * Math.sin(timeSec * 3.1)) * masterVol;
+                } else if (i === 2) {
+                  // 125Hz Dholak / Tabla Bayan
+                  targetEnergy = (0.32 + 0.45 * kickEnvelope + 0.3 * snareEnvelope + 0.15 * Math.cos(timeSec * 4.2)) * masterVol;
+                } else if (i === 3) {
+                  // 250Hz Warmth
+                  targetEnergy = (0.3 + 0.35 * vocalSwell + 0.25 * snareEnvelope + 0.15 * Math.sin(timeSec * 6.0)) * masterVol;
+                } else if (i === 4) {
+                  // 500Hz Body
+                  targetEnergy = (0.38 + 0.48 * vocalSwell + 0.2 * melodyFlutter) * masterVol;
+                } else if (i === 5) {
+                  // 1kHz Vocal Lead
+                  targetEnergy = (0.42 + 0.52 * vocalSwell + 0.25 * melodyFlutter + 0.1 * Math.sin(timeSec * 8.4)) * masterVol;
+                } else if (i === 6) {
+                  // 2kHz Presence
+                  targetEnergy = (0.38 + 0.45 * melodyFlutter + 0.25 * vocalSwell + 0.15 * snareEnvelope) * masterVol;
+                } else if (i === 7) {
+                  // 4kHz Clarity
+                  targetEnergy = (0.32 + 0.48 * snareEnvelope + 0.25 * (Math.sin(timeSec * 11.2) ** 2)) * masterVol;
+                } else if (i === 8) {
+                  // 8kHz Sparkle
+                  targetEnergy = (0.28 + 0.42 * snareEnvelope + 0.28 * (Math.sin(timeSec * 14.5) * 0.5 + 0.5)) * masterVol;
+                } else {
+                  // 16kHz Tape Air
+                  targetEnergy = (0.25 + 0.35 * (Math.sin(timeSec * 18.2) * 0.5 + 0.5) + 0.2 * Math.random()) * masterVol;
+                }
+
+                // Apply active EQ Gain Modifier in visual fallback if not bypassed
+                if (!eqBypassed) {
+                  const gainFactor = Math.pow(10, bandGains[i] / 24);
+                  targetEnergy = Math.max(0.04, Math.min(1.0, targetEnergy * gainFactor * band.factor));
+                }
+              }
             } else {
+              // When paused or stopped: decay cleanly to zero
               targetEnergy = 0;
             }
 
             // Ballistic Physics: Fast snappy attack + hardware smooth decay
             const curr = bandLevels[i];
             if (targetEnergy > curr) {
-              bandLevels[i] += (targetEnergy - curr) * Math.min(1, dt * 26); // Fast attack
+              bandLevels[i] += (targetEnergy - curr) * Math.min(1, dt * 28);
             } else {
-              bandLevels[i] += (targetEnergy - curr) * Math.min(1, dt * 8.5); // Analog decay
+              bandLevels[i] += (targetEnergy - curr) * Math.min(1, dt * 8.5);
             }
 
             // Peak Hold Physics: floating peak cap drops with gravity
             if (bandLevels[i] >= bandPeaks[i]) {
               bandPeaks[i] = bandLevels[i];
-              peakHoldExpiry[i] = timestamp + 420; // Hold peak for 420ms
+              peakHoldExpiry[i] = timestamp + 420;
             } else if (timestamp > peakHoldExpiry[i]) {
-              bandPeaks[i] = Math.max(0, bandPeaks[i] - dt * 1.35); // Gravity fall-off
+              bandPeaks[i] = Math.max(0, bandPeaks[i] - dt * 1.35);
             }
           }
 
@@ -4194,7 +4836,6 @@
                   ctx.fillStyle = '#10b981'; // Vintage emerald green
                 }
               } else {
-                // Subtle ghost LED frame
                 ctx.fillStyle = 'rgba(245, 179, 53, 0.08)';
               }
 
@@ -4238,7 +4879,7 @@
             ctx.lineTo(width - 8, gy);
             ctx.stroke();
           });
-          ctx.setLineDash([]); // Reset line dash
+          ctx.setLineDash([]);
 
           const numBands = 10;
           const colWidth = 34;
@@ -4276,11 +4917,10 @@
                   ctx.fillStyle = '#10b981'; // Emerald green
                 }
               } else {
-                ctx.fillStyle = 'rgba(245, 179, 53, 0.06)'; // Unlit LED ghost
+                ctx.fillStyle = 'rgba(245, 179, 53, 0.06)';
               }
 
               ctx.beginPath();
-              // Slightly rounded LED blocks
               ctx.roundRect ? ctx.roundRect(bx, sy, colWidth, segHeight, 1.5) : ctx.rect(bx, sy, colWidth, segHeight);
               ctx.fill();
             }

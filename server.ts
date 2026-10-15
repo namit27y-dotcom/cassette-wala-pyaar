@@ -578,15 +578,15 @@ For EACH song, return:
 
 Respond strictly with a JSON array conforming to the schema.`;
 
-    // Try reliable Flash models
+    // Prioritize high-availability, low-latency Flash models (gemini-3.1-flash-lite avoids 503 spikes)
     let rawText = '';
-    const modelsToTry = ['gemini-flash-latest', 'gemini-3.1-flash-lite', 'gemini-3.8-flash'];
+    const modelsToTry = ['gemini-3.1-flash-lite', 'gemini-3.8-flash', 'gemini-flash-latest'];
     let lastError: any = null;
 
     for (const model of modelsToTry) {
       try {
         const timeoutPromise = new Promise<never>((_, reject) =>
-          setTimeout(() => reject(new Error(`Timeout calling model ${model}`)), 6000)
+          setTimeout(() => reject(new Error(`Timeout calling model ${model}`)), 6500)
         );
 
         const callPromise = ai.models.generateContent({
@@ -621,8 +621,13 @@ Respond strictly with a JSON array conforming to the schema.`;
           break;
         }
       } catch (err: any) {
-        console.warn(`[Gemini] Model ${model} failed, trying next:`, err.message);
         lastError = err;
+        const errMsg = err?.message || '';
+        const isDemandSpike = errMsg.includes('503') || errMsg.includes('high demand');
+        const formattedErr = isDemandSpike ? '503 High Demand Spike' : errMsg.slice(0, 100);
+        console.warn(`[Gemini] Model ${model} unavailable (${formattedErr}), attempting next model...`);
+        // Brief pause to allow transient server spikes to clear
+        await new Promise(r => setTimeout(r, 150));
       }
     }
 
